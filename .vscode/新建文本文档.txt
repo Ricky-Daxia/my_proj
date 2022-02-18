@@ -1,0 +1,8 @@
+gcc带不同参数的含义:"-g"产生调试信息，"-c"编译中间目标文件，"-I"指定链接库，"-o"生成指定命名的可执行文件。
+把自定义.h（这里是 TicketMachine.h ）的路径放到 c_cpp_properties.json 中的includePath中，告诉vscode去哪里找头文件。
+配置tasks.json，目的是让vscode编译 TicketMachine.cpp并能让main函数调用。
+
+项目文件夹下创建头文件的文件夹include
+创建实现头文件的文件夹lib
+"-I","${workspaceFolder}/include",
+"${workspaceFolder}/lib/xxx.cpp"
