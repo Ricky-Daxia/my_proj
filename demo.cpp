@@ -43,6 +43,7 @@ int main() {
                     else if (res == 3) tp.manage_user_info (login_info[0].UID);
                 }
             }
+            res = 0;
             break;
         }
         case 4:

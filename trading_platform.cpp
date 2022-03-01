@@ -830,60 +830,63 @@ void best_selling (vector<commodity*>& commodity_list) {
 float purchase_commodity (vector<user*> user_list, string UID, vector<commodity*>& commodity_list, vector<order*>& order_list) {
     float cur_balance = 0;
     for (vector<user*>::iterator it1 = user_list.begin(); it1 != user_list.end(); ++it1)
-        if ((*it1)->UID == UID) cur_balance = (*it1)->balance;
-    cout << "请输入商品ID:";
-    string search_id;
-    cin.sync();
-    getline (cin, search_id);
-    cout << "请输入数量:";
-    int perchase_num;
-    cin >> perchase_num;
-    while (!cin) {
-            cout << "发生意想不到的错误!请重新输入:";
-            cin.clear();
+        if ((*it1)->UID == UID) {
+            cur_balance = (*it1)->balance; 
+            cout << "请输入商品ID:";
+            string search_id;
             cin.sync();
+            getline (cin, search_id);
+            cout << "请输入数量:";
+            int perchase_num;
             cin >> perchase_num;
-        }
-    cin.sync();
-    cout << "**************************************************" << endl;
-    
-    for (vector<commodity*>::iterator it = commodity_list.begin(); it != commodity_list.end(); ++it) 
-        if ((*it)->commodity_id == search_id && (*it)->commodity_status == COMMODITY_NORMAL) {
-            if ((*it)->stock < perchase_num)
-                cout << "商品库存不足!" << endl;
-            else if (cur_balance < (*it)->price * perchase_num)
-                cout << "余额不足!" << endl;
-            else {
-                cout << "交易提醒!" << endl;
-                //生成交易时间和新的余额
-                time_t now = time (0);
-                tm* ltime = localtime (&now);
-                string trade_date = to_string(ltime->tm_year + 1900) + "-" + to_string(1 + ltime->tm_mon) + 
-                    "-" + to_string(ltime->tm_mday);
-                cout << "交易时间: " << trade_date << endl;
-                cout << "交易单价: " << fixed << setprecision(1) <<(*it)->price << endl;
-                cout << "交易数量: " << perchase_num << endl;
-                cout << "交易状态: 交易成功" << endl;
-                float new_balance = cur_balance - (*it)->price * perchase_num;
-                cout << "您的余额: " << fixed << setprecision(1) <<new_balance << endl;
-                //对商品修改
-                int rest = (*it)->stock - perchase_num;
-                (*it)->stock = rest;
-                if (rest == 0) (*it)->commodity_status = COMMODITY_OUT; 
-                //对订单修改
-                string order_id = "T";
-                int order_cur_size = order_list.size();
-                if (order_cur_size < 9) order_id += "00" + to_string(order_cur_size + 1);
-                else if (order_cur_size < 99) order_id += "0" + to_string(order_cur_size + 1);
-                else order_id += to_string(order_cur_size + 1);
-                order_list.push_back(new order(order_id, (*it)->commodity_id, (*it)->price, perchase_num, trade_date, (*it)->trader_id,UID));
-                return new_balance;
-            }
+            while (!cin) {
+                    cout << "发生意想不到的错误!请重新输入:";
+                    cin.clear();
+                    cin.sync();
+                    cin >> perchase_num;
+                }
+            cin.sync();
             cout << "**************************************************" << endl;
-            return cur_balance;
-        }
-    cout << "没有找到该商品!" << endl;
-    cout << "**************************************************" << endl;
+            
+            for (vector<commodity*>::iterator it = commodity_list.begin(); it != commodity_list.end(); ++it) 
+                if ((*it)->commodity_id == search_id && (*it)->commodity_status == COMMODITY_NORMAL) {
+                    if ((*it)->stock < perchase_num)
+                        cout << "商品库存不足!" << endl;
+                    else if (cur_balance < (*it)->price * perchase_num)
+                        cout << "余额不足!" << endl;
+                    else {
+                        cout << "交易提醒!" << endl;
+                        //生成交易时间和新的余额
+                        time_t now = time (0);
+                        tm* ltime = localtime (&now);
+                        string trade_date = to_string(ltime->tm_year + 1900) + "-" + to_string(1 + ltime->tm_mon) + 
+                            "-" + to_string(ltime->tm_mday);
+                        cout << "交易时间: " << trade_date << endl;
+                        cout << "交易单价: " << fixed << setprecision(1) <<(*it)->price << endl;
+                        cout << "交易数量: " << perchase_num << endl;
+                        cout << "交易状态: 交易成功" << endl;
+                        float new_balance = cur_balance - (*it)->price * perchase_num;
+                        cout << "您的余额: " << fixed << setprecision(1) <<new_balance << endl;
+                        //对商品修改
+                        int rest = (*it)->stock - perchase_num;
+                        (*it)->stock = rest;
+                        if (rest == 0) (*it)->commodity_status = COMMODITY_OUT; 
+                        //对订单修改
+                        string order_id = "T";
+                        int order_cur_size = order_list.size();
+                        if (order_cur_size < 9) order_id += "00" + to_string(order_cur_size + 1);
+                        else if (order_cur_size < 99) order_id += "0" + to_string(order_cur_size + 1);
+                        else order_id += to_string(order_cur_size + 1);
+                        order_list.push_back(new order(order_id, (*it)->commodity_id, (*it)->price, perchase_num, trade_date, (*it)->trader_id,UID));
+                        (*it1)->balance = new_balance;
+                        return new_balance;
+                    }
+                    cout << "**************************************************" << endl;
+                    return cur_balance;
+                }
+            cout << "没有找到该商品!" << endl;
+            cout << "**************************************************" << endl;
+    }
     return cur_balance;
 }
 //4 o
@@ -966,7 +969,7 @@ void trading_platform:: buyer_menu (string cur_UID, float cur_balance) { //
         display_buyer_menu ();
         cout << "请输入操作:";
         getline (cin, choice);
-        while (!cin || choice.size() <=  0 || choice.size() > 1 || (choice[0] != '1' && choice[0] != '2' && choice[0] != '3' && choice[0] != '4')) {
+        while (!cin || choice.size() <=  0 || choice.size() > 1 || (choice[0] != '1' && choice[0] != '2' && choice[0] != '3' && choice[0] != '4' && choice[0] != '5' && choice[0] != '6')) {
             cout << "发生意想不到的错误!请重新输入:";
             cin.clear();
             cin.sync();
@@ -984,6 +987,7 @@ void trading_platform:: buyer_menu (string cur_UID, float cur_balance) { //
                 if (return_info != cur_balance) {
                     this->save_user();
                     this->save_commodity();
+                    this->save_order();
                 }
                 system("pause");
                 break;
@@ -1182,3 +1186,20 @@ void trading_platform:: manage_user_info (string cur_UID) {
     }
 }
 
+void trading_platform:: save_order () {
+    ofstream ofs;
+    ofs.open (ORDER, ios::trunc);
+    if (!ofs.is_open()) {
+        cout << "Unexpected Error!";
+        exit(-1);
+    }
+    else {
+        ofs << "订单ID,商品ID,交易单价,数量,交易时间,卖家ID,买家ID" << endl;
+        for (vector<order*>::iterator it = order_list.begin(); it != order_list.end(); ++it)
+            ofs << (*it)->order_id << ',' << (*it)->commodity_id << ','
+                << fixed << setprecision(1) << (*it)->trade_price << ',' << (*it)->sold_num << ','
+                << (*it)->trade_time << ',' <<(*it)->trader_id << ','
+                << (*it)->buyer_id << endl;
+    }
+    ofs.close();
+}

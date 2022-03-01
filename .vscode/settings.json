@@ -4,7 +4,9 @@
         "ostream": "cpp",
         "string": "cpp",
         "istream": "cpp",
-        "xiosbase": "cpp"
+        "xiosbase": "cpp",
+        "iosfwd": "cpp",
+        "vector": "cpp"
     },
     "files.encoding": "gbk"
 }

@@ -21,18 +21,15 @@ public:
     
     sub_user_info (string _UID, float _cur_balance): UID(_UID), cur_balance(_cur_balance) {}
 };
-
 void Delay(int   time);
 
 class trading_platform {
 public:
     trading_platform ();
-
+    
     ~trading_platform ();
-
+    
     void show_menu ();
-
-    //void admin_menu ();
 
     int sub_user_menu ();
 
@@ -55,8 +52,6 @@ public:
     vector<sub_user_info> user_login ();
 
     void admin_menu ();
-    
-    //void trader_menu ();
 
     int commodity_num;
 
@@ -67,6 +62,8 @@ public:
     int order_num;
 
     vector<order*> order_list;
+
+    void save_order ();
 
     void manage_user_info (string cur_UID);
 };
