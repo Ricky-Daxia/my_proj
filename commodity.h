@@ -1,7 +1,13 @@
 #pragma once
 #include<iostream>
 #include<string.h>
+#include<string>
+#include<vector>
+#include<iomanip>
 using namespace std;
+#define COMMODITY_NORMAL "销售中"
+#define COMMODITY_OUT "已下架"
+
 
 class commodity {
 public:
@@ -18,3 +24,21 @@ public:
                 float price, int stock, string text, 
                 string trader_id, string launch_time, string commodity_status);
 };
+
+void display_commodity_list (vector<commodity*>& commodity_list);
+
+void search_commodity (vector<commodity*>& commodity_list);
+
+int remove_commodity (vector<commodity*>& commodity_list, string UID);
+
+int launch_commodity (vector<commodity*>& commodity_list, string UID);
+
+void display_launched_commodity (vector<commodity*>& commodity_list, string UID);
+
+int modify_commodity (vector<commodity*>& commodity_list, string UID);
+
+void best_selling (vector<commodity*>& commodity_list);
+
+void search_on_sale (vector<commodity*>& commodity_list);
+
+void display_details (vector<commodity*> commodity_list);

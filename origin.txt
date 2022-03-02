@@ -4,7 +4,7 @@
 #include<conio.h>
 #include<iomanip>
 
-void Delay(int   time)//time*1000ÎªÃëÊı 
+void Delay(int   time)//time*1000ä¸ºç§’æ•° 
 { 
     clock_t   now   =   clock(); 
 
@@ -17,46 +17,46 @@ inline bool contain_space (string& str) {
     return false;
 }
 
-trading_platform:: trading_platform () { //°ÑÓÃ»§ÉÌÆ·³õÊ¼»¯±ä³ÉÀàµÄË½ÓĞº¯ÊıÈ»ºóµ÷ÓÃ
+trading_platform:: trading_platform () { //æŠŠç”¨æˆ·å•†å“åˆå§‹åŒ–å˜æˆç±»çš„ç§æœ‰å‡½æ•°ç„¶åè°ƒç”¨
     user_num = -1, commodity_num = -1, order_num = -1;
     user_list = {}, name_list = {}, commodity_list = {}, order_list = {};
     string buffer = "", temp = "";
     vector<string> attributes = {};
-    //³õÊ¼»¯ÓÃ»§
+    //åˆå§‹åŒ–ç”¨æˆ·
     ifstream ifs;
     ofstream ofs;
     ifs.open(USER, ios::in);
     if (!ifs.is_open()){
         ofs.open (USER, ios::out);
-        ofs << "ÓÃ»§ID,ÓÃ»§Ãû,ÃÜÂë,ÁªÏµ·½Ê½,µØÖ·,Ç®°üÓà¶î,ÓÃ»§×´Ì¬" << endl;
+        ofs << "ç”¨æˆ·ID,ç”¨æˆ·å,å¯†ç ,è”ç³»æ–¹å¼,åœ°å€,é’±åŒ…ä½™é¢,ç”¨æˆ·çŠ¶æ€" << endl;
         ofs.close();
         user_num = 0;
     }
-    else { //¶ÁÈ¡µ±Ç°µÄÓÃ»§Êı  
+    else { //è¯»å–å½“å‰çš„ç”¨æˆ·æ•°  
         while (getline(ifs, buffer)) {
             ++user_num;
             if (user_num > 0) {
-                for (int i = 0; i < buffer.size(); ++i) { //7¸öÊôĞÔ´æÈëÊı×éÖĞ
+                for (int i = 0; i < buffer.size(); ++i) { //7ä¸ªå±æ€§å­˜å…¥æ•°ç»„ä¸­
                     if (buffer[i] == ',')  {
                         attributes.push_back(temp); 
                         temp = "";
                     }
                     else temp.append(1, buffer[i]);
                 }
-                //´æÈë
+                //å­˜å…¥
                 user_list.push_back(new user(attributes[0], attributes[1], attributes[2], attributes[3], attributes[4], stof(attributes[5]), temp));
                 name_list.push_back(attributes[1]);
-                temp = "", attributes = {}, buffer = ""; //Çå¿Õ
+                temp = "", attributes = {}, buffer = ""; //æ¸…ç©º
             }
         }
     }
     ifs.close();
 
-    //³õÊ¼»¯ÉÌÆ·
+    //åˆå§‹åŒ–å•†å“
     ifs.open (COMMORDITY, ios::in);
     if (!ifs.is_open()) {
         ofs.open (COMMORDITY, ios::out);
-        ofs << "ÉÌÆ·ID,Ãû³Æ,¼Û¸ñ,ÊıÁ¿,ÃèÊö,Âô¼ÒID,ÉÏ¼ÜÊ±¼ä,ÉÌÆ·×´Ì¬" << endl;
+        ofs << "å•†å“ID,åç§°,ä»·æ ¼,æ•°é‡,æè¿°,å–å®¶ID,ä¸Šæ¶æ—¶é—´,å•†å“çŠ¶æ€" << endl;
         ofs.close();
         commodity_num = 0;
     }
@@ -64,7 +64,7 @@ trading_platform:: trading_platform () { //°ÑÓÃ»§ÉÌÆ·³õÊ¼»¯±ä³ÉÀàµÄË½ÓĞº¯ÊıÈ»ºóµ
         while (getline(ifs, buffer)) {
             ++commodity_num;
             if (commodity_num > 0) {
-                for (int i = 0; i < buffer.size(); ++i) { //7¸öÊôĞÔ´æÈëÊı×éÖĞ
+                for (int i = 0; i < buffer.size(); ++i) { //7ä¸ªå±æ€§å­˜å…¥æ•°ç»„ä¸­
                     if (buffer[i] == ',')  {
                         attributes.push_back(temp); 
                         temp = "";
@@ -78,11 +78,11 @@ trading_platform:: trading_platform () { //°ÑÓÃ»§ÉÌÆ·³õÊ¼»¯±ä³ÉÀàµÄË½ÓĞº¯ÊıÈ»ºóµ
     }
     ifs.close();
 
-    //³õÊ¼»¯¶©µ¥
+    //åˆå§‹åŒ–è®¢å•
     ifs.open (ORDER, ios::in);
     if (!ifs.is_open()) {
         ofs.open (ORDER, ios::out);
-        ofs << "¶©µ¥ID,ÉÌÆ·ID,½»Ò×µ¥¼Û,ÊıÁ¿,½»Ò×Ê±¼ä,Âô¼ÒID,Âò¼ÒID" << endl;
+        ofs << "è®¢å•ID,å•†å“ID,äº¤æ˜“å•ä»·,æ•°é‡,äº¤æ˜“æ—¶é—´,å–å®¶ID,ä¹°å®¶ID" << endl;
         ofs.close();
         order_num = 0;
     }
@@ -90,7 +90,7 @@ trading_platform:: trading_platform () { //°ÑÓÃ»§ÉÌÆ·³õÊ¼»¯±ä³ÉÀàµÄË½ÓĞº¯ÊıÈ»ºóµ
         while (getline(ifs, buffer)) {
             ++order_num;
             if (order_num > 0) {
-                for (int i = 0; i < buffer.size(); ++i) { //7¸öÊôĞÔ´æÈëÊı×éÖĞ
+                for (int i = 0; i < buffer.size(); ++i) { //7ä¸ªå±æ€§å­˜å…¥æ•°ç»„ä¸­
                     if (buffer[i] == ',')  {
                         attributes.push_back(temp); 
                         temp = "";
@@ -106,48 +106,45 @@ trading_platform:: trading_platform () { //°ÑÓÃ»§ÉÌÆ·³õÊ¼»¯±ä³ÉÀàµÄË½ÓĞº¯ÊıÈ»ºóµ
 }
 
 trading_platform:: ~trading_platform () {
-    user_list.clear();
-    commodity_list.clear();
-    order_list.clear();
-    name_list.clear();
+    
 }
 
 void trading_platform:: show_menu () {
     cout << "============================================" << endl;
-    cout << "¶¬°Â¼ÍÄîÆ·½»Ò×Æ½Ì¨ ÎªÖĞ¹ú°ÂÔË½¡¶ù¼ÓÓÍ" << endl;
-    cout << "1.¹ÜÀíÔ±µÇÂ¼ 2.ÓÃ»§×¢²á 3.ÓÃ»§µÇÂ¼ 4.ÍË³ö³ÌĞò" << endl;
+    cout << "å†¬å¥¥çºªå¿µå“äº¤æ˜“å¹³å° ä¸ºä¸­å›½å¥¥è¿å¥å„¿åŠ æ²¹" << endl;
+    cout << "1.ç®¡ç†å‘˜ç™»å½• 2.ç”¨æˆ·æ³¨å†Œ 3.ç”¨æˆ·ç™»å½• 4.é€€å‡ºç¨‹åº" << endl;
     cout << "============================================" << endl;
     cout << endl;
 }
-
+//1 o
 int trading_platform:: admin_login () {
     string input_name;
     string input_password;
 
-    cout << "ÇëÊäÈë¹ÜÀíÔ±ĞÕÃû:";
+    cout << "è¯·è¾“å…¥ç®¡ç†å‘˜å§“å:";
     cin.sync ();
     getline(cin, input_name);
-    cout << "ÇëÊäÈëÃÜÂë:";
+    cout << "è¯·è¾“å…¥å¯†ç :";
     
     char ch;
     while ((ch = getch()) != '\r'){
-        input_password.append(1, char(ch)); //²»»ØÏÔ
+        input_password.append(1, char(ch)); //ä¸å›æ˜¾
         }
 
     cout << endl;
 
     if (input_name == ADMIN_NAME) {
         if (input_password == ADMIN_PASSWORD){
-            cout << "-----µÇÂ¼³É¹¦!-----" << endl;
+            cout << "-----ç™»å½•æˆåŠŸ!-----" << endl;
             return 1;
         }
-        else cout << "ÃÜÂë´íÎó!" << endl;
+        else cout << "å¯†ç é”™è¯¯!" << endl;
     }
-    else cout << "¹ÜÀíÔ±ĞÕÃû´íÎó!" << endl;
+    else cout << "ç®¡ç†å‘˜å§“åé”™è¯¯!" << endl;
     return -1;
 }
 
-void trading_platform:: save_user () { //±£´æÓÃ»§µ½ÎÄ¼şÖĞ
+void trading_platform:: save_user () { //ä¿å­˜ç”¨æˆ·åˆ°æ–‡ä»¶ä¸­
     ofstream ofs;
     ofs.open (USER, ios::trunc);
     if (!ofs.is_open()) {
@@ -155,7 +152,7 @@ void trading_platform:: save_user () { //±£´æÓÃ»§µ½ÎÄ¼şÖĞ
         exit(-1);
     }
     else {
-        ofs << "ÓÃ»§ID,ÓÃ»§Ãû,ÃÜÂë,ÁªÏµ·½Ê½,µØÖ·,Ç®°üÓà¶î,ÓÃ»§×´Ì¬" << endl;
+        ofs << "ç”¨æˆ·ID,ç”¨æˆ·å,å¯†ç ,è”ç³»æ–¹å¼,åœ°å€,é’±åŒ…ä½™é¢,ç”¨æˆ·çŠ¶æ€" << endl;
         for (vector<user*>::iterator it = user_list.begin(); it != user_list.end(); ++it)
             ofs << (*it)->UID << ',' << (*it)->user_name << ','
                 << (*it)->user_password << ',' << (*it)->contact << ','
@@ -164,67 +161,67 @@ void trading_platform:: save_user () { //±£´æÓÃ»§µ½ÎÄ¼şÖĞ
     }
     ofs.close();
 }
-
-void trading_platform:: sign_up () { //»ù±¾Íê³É¼ì²é(²»ÄÜ²éÖĞÎÄ)
+//2 o
+void trading_platform:: sign_up () { //åŸºæœ¬å®Œæˆæ£€æŸ¥(ä¸èƒ½æŸ¥ä¸­æ–‡)
     string user_password = "", contact = "";
     string user_name = "", address = "";
     float balance = 0.0;
 
-    cout << "ÇëÊäÈëÓÃ»§Ãû(²»³¬¹ı10¸ö×Ö·û):";
+    cout << "è¯·è¾“å…¥ç”¨æˆ·å(ä¸è¶…è¿‡10ä¸ªå­—ç¬¦):";
     cin.sync();
     getline (cin, user_name);
     while (user_name.size() > 20 || user_name.size() <= 0 || contain_space (user_name)) {
-        cout << "ÓÃ»§Ãû²»ºÏ·¨!" << endl << "ÇëÖØĞÂÊäÈëÓÃ»§Ãû(²»³¬¹ı10¸ö×Ö·û):";
+        cout << "ç”¨æˆ·åä¸åˆæ³•!" << endl << "è¯·é‡æ–°è¾“å…¥ç”¨æˆ·å(ä¸è¶…è¿‡10ä¸ªå­—ç¬¦):";
         user_name.resize (0);
         cin.sync();
         getline (cin, user_name);
     }
     
-    cout << "ÇëÊäÈëÃÜÂë(²»³¬¹ı20¸ö×Ö·û,ÓÉĞ¡Ğ´×ÖÄ¸ºÍÊı×Ö×é³É):";
+    cout << "è¯·è¾“å…¥å¯†ç (ä¸è¶…è¿‡20ä¸ªå­—ç¬¦,ç”±å°å†™å­—æ¯å’Œæ•°å­—ç»„æˆ):";
     char ch;
     while ((ch = getch())){
-        if (ch == '\r' || user_password.size() >= 20) break; //Êä¹»ÁË¾Í²»ÄÜÔÙÊäÈëÁË
-        else if ((ch >= '0' && ch <= '9') || (ch >= 'a' && ch <= 'z')) {//ºÏ·¨ĞÔ¼ì²é
-            user_password.append(1, char(ch)); //×¢Òâº¯Êı²ÎÊı
+        if (ch == '\r' || user_password.size() >= 20) break; //è¾“å¤Ÿäº†å°±ä¸èƒ½å†è¾“å…¥äº†
+        else if ((ch >= '0' && ch <= '9') || (ch >= 'a' && ch <= 'z')) {//åˆæ³•æ€§æ£€æŸ¥
+            user_password.append(1, char(ch)); //æ³¨æ„å‡½æ•°å‚æ•°
             cout.put('*');
         }
         else {
-            cout << endl << "ÃÜÂëÖĞº¬ÓĞ²»ºÏ·¨×Ö·û!" << endl;
+            cout << endl << "å¯†ç ä¸­å«æœ‰ä¸åˆæ³•å­—ç¬¦!" << endl;
             user_password.resize (0);
-            cout << "ÇëÖØĞÂÊäÈëÃÜÂë(²»³¬¹ı20¸ö×Ö·û,ÓÉĞ¡Ğ´×ÖÄ¸ºÍÊı×Ö×é³É):" ;
+            cout << "è¯·é‡æ–°è¾“å…¥å¯†ç (ä¸è¶…è¿‡20ä¸ªå­—ç¬¦,ç”±å°å†™å­—æ¯å’Œæ•°å­—ç»„æˆ):" ;
         }
     }
 
-    cout << endl << "ÇëÊäÈëÁªÏµ·½Ê½(²»³¬¹ı20¸ö×Ö·û,ÓÉÊı×Ö×é³É):";
+    cout << endl << "è¯·è¾“å…¥è”ç³»æ–¹å¼(ä¸è¶…è¿‡20ä¸ªå­—ç¬¦,ç”±æ•°å­—ç»„æˆ):";
     cin.sync ();
     getline (cin, contact);
     while (contact.size() > 20 || contact.size() <= 0 || !contain_all_nums (contact) || contain_space (contact)) {
-        cout << "ÊäÈëÓĞÎó!" << endl << "ÇëÖØĞÂÊäÈëÁªÏµ·½Ê½(²»³¬¹ı20¸ö×Ö·û,ÓÉÊı×Ö×é³É):";
+        cout << "è¾“å…¥æœ‰è¯¯!" << endl << "è¯·é‡æ–°è¾“å…¥è”ç³»æ–¹å¼(ä¸è¶…è¿‡20ä¸ªå­—ç¬¦,ç”±æ•°å­—ç»„æˆ):";
         contact.resize (0);
         cin.sync ();
         getline (cin, contact);
     }
 
-    cout << "ÇëÊäÈëµØÖ·(²»³¬¹ı20¸ö×Ö·û,ÖĞÎÄºº×Ö»òÓ¢ÎÄ×ÖÄ¸):";
+    cout << "è¯·è¾“å…¥åœ°å€(ä¸è¶…è¿‡20ä¸ªå­—ç¬¦,ä¸­æ–‡æ±‰å­—æˆ–è‹±æ–‡å­—æ¯):";
     cin.sync ();
     getline (cin, address);
     while (address.size() > 20 || contain_space (address)) {
-        cout << "ÊäÈëÓĞÎó!" << endl << "ÇëÖØĞÂÊäÈëµØÖ·(²»³¬¹ı20¸ö×Ö·û,ÖĞÎÄºº×Ö»òÓ¢ÎÄ×ÖÄ¸):";
+        cout << "è¾“å…¥æœ‰è¯¯!" << endl << "è¯·é‡æ–°è¾“å…¥åœ°å€(ä¸è¶…è¿‡20ä¸ªå­—ç¬¦,ä¸­æ–‡æ±‰å­—æˆ–è‹±æ–‡å­—æ¯):";
         address.resize (0);
         cin.sync ();
         getline (cin, address);
     }
 
-    if (!name_list.empty()) { //±£Ö¤ÓÃ»§ÃûÎ¨Ò»
+    if (!name_list.empty()) { //ä¿è¯ç”¨æˆ·åå”¯ä¸€
         bool is_only = false;
         while (!is_only){
             is_only = true;
             for (vector<string>::iterator it = name_list.begin(); it != name_list.end(); ++it)
                 if (user_name == *it) {
-                    cout << "ÓÃ»§ÃûÒÑ´æÔÚ!" << endl << "ÇëÖØĞÂÊäÈëÓÃ»§Ãû:";
+                    cout << "ç”¨æˆ·åå·²å­˜åœ¨!" << endl << "è¯·é‡æ–°è¾“å…¥ç”¨æˆ·å:";
                     getline (cin, user_name);
                     while (user_name.size() > 20 || user_name.size() <= 0) {
-                        cout << "ÓÃ»§Ãû²»ºÏ·¨!" << endl << "ÇëÖØĞÂÊäÈëÓÃ»§Ãû:";
+                        cout << "ç”¨æˆ·åä¸åˆæ³•!" << endl << "è¯·é‡æ–°è¾“å…¥ç”¨æˆ·å:";
                         user_name.resize (0);
                         cin.sync ();
                         getline (cin, user_name);
@@ -235,7 +232,7 @@ void trading_platform:: sign_up () { //»ù±¾Íê³É¼ì²é(²»ÄÜ²éÖĞÎÄ)
         }
     } 
 
-    //´æÈëÓÃ»§ÁĞ±íÖĞ
+    //å­˜å…¥ç”¨æˆ·åˆ—è¡¨ä¸­
     if (user_list.empty())
         user_list.push_back(new user("U001", user_name, user_password, contact, address, balance, NORMAL));
     else {
@@ -250,40 +247,42 @@ void trading_platform:: sign_up () { //»ù±¾Íê³É¼ì²é(²»ÄÜ²éÖĞÎÄ)
     }
     this->save_user();
     ++user_num;
-    cout << "×¢²á³É¹¦!" << endl;
+    cout << "æ³¨å†ŒæˆåŠŸ!" << endl;
 }
-
-vector<sub_user_info> trading_platform:: user_login () { //ÓÃ»§µÇÂ¼·µ»ØUIDºÍÓà¶î
+//3 o
+vector<sub_user_info> trading_platform:: user_login () { //ç”¨æˆ·ç™»å½•è¿”å›UIDå’Œä½™é¢
     string user_name, user_password;
     
-    cout << "ÇëÊäÈëÓÃ»§Ãû:";
+    cout << "è¯·è¾“å…¥ç”¨æˆ·å:";
     cin.sync();
     getline (cin, user_name);
 
-    cout << "ÇëÊäÈëÃÜÂë:";
+    cout << "è¯·è¾“å…¥å¯†ç :";
     char ch;
     while ((ch = getch()) != '\r'){
-        user_password.append(1, char(ch)); //×¢Òâº¯Êı²ÎÊı
+        user_password.append(1, char(ch)); //æ³¨æ„å‡½æ•°å‚æ•°
         cout.put('*');
     }
     cout << endl;
 
     for (vector<user*>::iterator it = user_list.begin(); it != user_list.end(); ++it) {
-        if ((*it)->user_name == user_name && (*it)->status == "Õı³£") {
+        if ((*it)->user_name == user_name && (*it)->status == "æ­£å¸¸") {
             if ((*it)->user_password == user_password) {
-                cout << "-----µÇÂ¼³É¹¦-----" << endl;
+                cout << "-----ç™»å½•æˆåŠŸ-----" << endl;
                 cout << endl;
                 return {sub_user_info ((*it)->UID, (*it)->balance)};
             }
-            else cout << "-----ÃÜÂë´íÎó-----" << endl << endl;
+            else cout << "-----å¯†ç é”™è¯¯-----" << endl << endl;
             return {};
         }
     }
-    cout << "-----ÓÃ»§²»´æÔÚ»òÒÑ±»·â½û!-----" << endl << endl;
+    cout << "-----ç”¨æˆ·ä¸å­˜åœ¨æˆ–å·²è¢«å°ç¦!-----" << endl << endl;
     return {};
 }
 
-void trading_platform:: save_commodity () { //±£´æÉÌÆ·
+//void show_admin_menu () {}
+
+void trading_platform:: save_commodity () { //ä¿å­˜å•†å“
     ofstream ofs;
     ofs.open (COMMORDITY, ios::trunc);
     if (!ofs.is_open()) {
@@ -291,7 +290,7 @@ void trading_platform:: save_commodity () { //±£´æÉÌÆ·
         exit(-1);
     }
     else {
-        ofs << "ÉÌÆ·ID,Ãû³Æ,¼Û¸ñ,ÊıÁ¿,ÃèÊö,Âô¼ÒID,ÉÏ¼ÜÊ±¼ä,ÉÌÆ·×´Ì¬" << endl;
+        ofs << "å•†å“ID,åç§°,ä»·æ ¼,æ•°é‡,æè¿°,å–å®¶ID,ä¸Šæ¶æ—¶é—´,å•†å“çŠ¶æ€" << endl;
         for (vector<commodity*>::iterator it = commodity_list.begin(); it != commodity_list.end(); ++it)
             ofs << (*it)->commodity_id << ',' << (*it)->commodity_name << ','
                 << fixed << setprecision(1) <<(*it)->price << ',' << setprecision(0) <<(*it)->stock 
@@ -301,6 +300,18 @@ void trading_platform:: save_commodity () { //±£´æÉÌÆ·
     }
 }
 
+//void display_commodity_list (vector<commodity*>& commodity_list) { //å±•ç¤ºå•†å“åˆ—è¡¨}
+//4 o
+//void search_commodity (vector<commodity*>& commodity_list) { //æœç´¢å•†å“}
+//5 o
+//int remove_commodity (vector<commodity*>& commodity_list, string UID) {}
+
+//void display_order_list (vector<order*>& order_list) {}
+
+//void display_user_list (vector<user*>& user_list) { //å±•ç¤ºç”¨æˆ·åˆ—è¡¨}
+//6 o
+//int ban_user (vector<user*>& user_list) { //å°ç¦ç”¨æˆ·}
+//7 o
 void trading_platform:: admin_menu () {
 
     int res = 0;
@@ -309,47 +320,47 @@ void trading_platform:: admin_menu () {
     while (true) {
         system("cls");
         show_admin_menu ();
-        cout << "ÇëÊäÈë²Ù×÷:";
+        cout << "è¯·è¾“å…¥æ“ä½œ:";
         cin.sync();
         getline (cin, choice);
         while (choice.size() > 1 || choice.size() <= 0 || (choice[0] != '1' && choice[0] != '2' && choice[0] != '3' && choice[0] != '4' && choice[0] != '5' && choice[0] != '6' && choice[0] != '7')) {
-            cout << endl << "ÎŞĞ§ÊäÈë!ÇëÖØĞÂÊäÈëÑ¡Ôñ:";
+            cout << endl << "æ— æ•ˆè¾“å…¥!è¯·é‡æ–°è¾“å…¥é€‰æ‹©:";
             cin.clear(); 
             cin.sync();
             getline (cin, choice);
         }
         switch (stoi(choice))
         {
-            case 1: //²é¿´ËùÓĞÉÌÆ·
+            case 1: //æŸ¥çœ‹æ‰€æœ‰å•†å“
                 display_commodity_list (commodity_list);
                 system("pause");
                 break;
-            case 2: //ËÑË÷ÉÌÆ·
+            case 2: //æœç´¢å•†å“
                 search_commodity (commodity_list);
                 system("pause");
                 break;
-            case 3: //ÏÂ¼ÜÉÌÆ·
+            case 3: //ä¸‹æ¶å•†å“
                 res = remove_commodity (commodity_list, "");
                 if (res == 1) this->save_commodity();
                 system("pause");
                 break;
-            case 4: //²é¿´ËùÓĞ¶©µ¥
+            case 4: //æŸ¥çœ‹æ‰€æœ‰è®¢å•
                 display_order_list (order_list);
                 system("pause");
                 break;
-            case 5: //²é¿´ËùÓĞÓÃ»§
+            case 5: //æŸ¥çœ‹æ‰€æœ‰ç”¨æˆ·
                 display_user_list (user_list);
                 system("pause");
                 break;
-            case 6: {//·â½ûÓÃ»§
+            case 6: {//å°ç¦ç”¨æˆ·
                 res = ban_user (user_list);
                 if (res == 1) this->save_user();
                 system("pause");
                 break;
             }
-            case 7: { //×¢ÏúÄ£¿é
-                cout << "-----È·¶¨ÍË³ö?-----" << endl;
-                cout << "-----°´'1'È·¶¨,°´ÆäËü¼ü·µ»Ø-----" << endl;
+            case 7: { //æ³¨é”€æ¨¡å—
+                cout << "-----ç¡®å®šé€€å‡º?-----" << endl;
+                cout << "-----æŒ‰'1'ç¡®å®š,æŒ‰å…¶å®ƒé”®è¿”å›-----" << endl;
                 // cin >> res;
                 // if (!cin || res != 1) 
                 //     break;
@@ -370,18 +381,32 @@ void trading_platform:: admin_menu () {
         }
 }
 
-void trading_platform:: trader_menu (string cur_UID) { //Âô¼Ò½çÃæ
+//void display_user_menu () {}
+
+//void display_buyer_menu () {}
+
+//void display_trader_menu () {}
+//8 o
+//int launch_commodity (vector<commodity*>& commodity_list, string UID) { //å–å®¶å‘å¸ƒå•†å“}
+
+//void display_launched_commodity (vector<commodity*>& commodity_list, string UID) { //å±•ç¤ºå–å®¶å•†å“åˆ—è¡¨}
+//9 o
+//int modify_commodity (vector<commodity*>& commodity_list, string UID) { //å–å®¶ä¿®æ”¹å•†å“}
+
+//void display_trader_orders (vector<order*>& order_list, string UID) { //å±•ç¤ºå–å®¶è®¢å•}
+//1 o
+void trading_platform:: trader_menu (string cur_UID) { //å–å®¶ç•Œé¢
     int res = 0;
     string choice = "";
 
     while (true) {
         system("cls");
         display_trader_menu ();
-        cout << "ÇëÊäÈë²Ù×÷:";
+        cout << "è¯·è¾“å…¥æ“ä½œ:";
         cin.sync();
         getline (cin, choice);
         while (choice.size() > 1 || (choice[0] != '1' && choice[0] != '2' && choice[0] != '3' && choice[0] != '4' && choice[0] != '5' && choice[0] != '6')) {
-            cout << "ÊäÈëÓĞÎó!ÇëÖØĞÂÊäÈë:";
+            cout << "è¾“å…¥æœ‰è¯¯!è¯·é‡æ–°è¾“å…¥:";
             choice.resize(0);
             cin.sync();
             getline (cin, choice);
@@ -414,20 +439,20 @@ void trading_platform:: trader_menu (string cur_UID) { //Âô¼Ò½çÃæ
             case 6:
                 return;
             default:
-                cout << "ÎŞĞ§²Ù×÷!" << endl;
+                cout << "æ— æ•ˆæ“ä½œ!" << endl;
                 break;
         } 
     }
 }
-
+//2 o
 int trading_platform:: sub_user_menu () {
     display_user_menu ();
     string choice = "";
-    cout << "ÇëÊäÈë²Ù×÷:";
+    cout << "è¯·è¾“å…¥æ“ä½œ:";
     cin.sync();
     getline (cin, choice);
     while (choice.size() > 1 || (choice[0] != '1' && choice[0] != '2' && choice[0] != '3' && choice[0] != '4')) {
-        cout << "ÊäÈëÓĞÎó!ÇëÖØĞÂÊäÈë:";
+        cout << "è¾“å…¥æœ‰è¯¯!è¯·é‡æ–°è¾“å…¥:";
         cin.sync();
         choice.resize(0);
         getline (cin, choice);
@@ -436,20 +461,22 @@ int trading_platform:: sub_user_menu () {
     return stoi(choice);
 }
 
+//void best_selling (vector<commodity*>& commodity_list) {}
+//3 o
 float purchase_commodity (vector<user*> user_list, string UID, vector<commodity*>& commodity_list, vector<order*>& order_list) {
     float cur_balance = 0;
     for (vector<user*>::iterator it1 = user_list.begin(); it1 != user_list.end(); ++it1)
         if ((*it1)->UID == UID) {
             cur_balance = (*it1)->balance; 
-            cout << "ÇëÊäÈëÉÌÆ·ID:";
+            cout << "è¯·è¾“å…¥å•†å“ID:";
             string search_id;
             cin.sync();
             getline (cin, search_id);
-            cout << "ÇëÊäÈëÊıÁ¿:";
+            cout << "è¯·è¾“å…¥æ•°é‡:";
             int perchase_num;
             cin >> perchase_num;
             while (!cin) {
-                    cout << "·¢ÉúÒâÏë²»µ½µÄ´íÎó!ÇëÖØĞÂÊäÈë:";
+                    cout << "å‘ç”Ÿæ„æƒ³ä¸åˆ°çš„é”™è¯¯!è¯·é‡æ–°è¾“å…¥:";
                     cin.clear();
                     cin.sync();
                     cin >> perchase_num;
@@ -460,27 +487,27 @@ float purchase_commodity (vector<user*> user_list, string UID, vector<commodity*
             for (vector<commodity*>::iterator it = commodity_list.begin(); it != commodity_list.end(); ++it) 
                 if ((*it)->commodity_id == search_id && (*it)->commodity_status == COMMODITY_NORMAL) {
                     if ((*it)->stock < perchase_num)
-                        cout << "ÉÌÆ·¿â´æ²»×ã!" << endl;
+                        cout << "å•†å“åº“å­˜ä¸è¶³!" << endl;
                     else if (cur_balance < (*it)->price * perchase_num)
-                        cout << "Óà¶î²»×ã!" << endl;
+                        cout << "ä½™é¢ä¸è¶³!" << endl;
                     else {
-                        cout << "½»Ò×ÌáĞÑ!" << endl;
-                        //Éú³É½»Ò×Ê±¼äºÍĞÂµÄÓà¶î
+                        cout << "äº¤æ˜“æé†’!" << endl;
+                        //ç”Ÿæˆäº¤æ˜“æ—¶é—´å’Œæ–°çš„ä½™é¢
                         time_t now = time (0);
                         tm* ltime = localtime (&now);
                         string trade_date = to_string(ltime->tm_year + 1900) + "-" + to_string(1 + ltime->tm_mon) + 
                             "-" + to_string(ltime->tm_mday);
-                        cout << "½»Ò×Ê±¼ä: " << trade_date << endl;
-                        cout << "½»Ò×µ¥¼Û: " << fixed << setprecision(1) <<(*it)->price << endl;
-                        cout << "½»Ò×ÊıÁ¿: " << perchase_num << endl;
-                        cout << "½»Ò××´Ì¬: ½»Ò×³É¹¦" << endl;
+                        cout << "äº¤æ˜“æ—¶é—´: " << trade_date << endl;
+                        cout << "äº¤æ˜“å•ä»·: " << fixed << setprecision(1) <<(*it)->price << endl;
+                        cout << "äº¤æ˜“æ•°é‡: " << perchase_num << endl;
+                        cout << "äº¤æ˜“çŠ¶æ€: äº¤æ˜“æˆåŠŸ" << endl;
                         float new_balance = cur_balance - (*it)->price * perchase_num;
-                        cout << "ÄúµÄÓà¶î: " << fixed << setprecision(1) <<new_balance << endl;
-                        //¶ÔÉÌÆ·ĞŞ¸Ä
+                        cout << "æ‚¨çš„ä½™é¢: " << fixed << setprecision(1) <<new_balance << endl;
+                        //å¯¹å•†å“ä¿®æ”¹
                         int rest = (*it)->stock - perchase_num;
                         (*it)->stock = rest;
                         if (rest == 0) (*it)->commodity_status = COMMODITY_OUT; 
-                        //¶Ô¶©µ¥ĞŞ¸Ä
+                        //å¯¹è®¢å•ä¿®æ”¹
                         string order_id = "T";
                         int order_cur_size = order_list.size();
                         if (order_cur_size < 9) order_id += "00" + to_string(order_cur_size + 1);
@@ -493,12 +520,18 @@ float purchase_commodity (vector<user*> user_list, string UID, vector<commodity*
                     cout << "**************************************************" << endl;
                     return cur_balance;
                 }
-            cout << "Ã»ÓĞÕÒµ½¸ÃÉÌÆ·!" << endl;
+            cout << "æ²¡æœ‰æ‰¾åˆ°è¯¥å•†å“!" << endl;
             cout << "**************************************************" << endl;
     }
     return cur_balance;
 }
+//4 o
+//void search_on_sale (vector<commodity*>& commodity_list) {}
 
+//void display_buyer_order (vector<order*> order_list, string UID) {}
+//5 o
+//void display_details (vector<commodity*> commodity_list) {}
+//6 o
 void trading_platform:: buyer_menu (string cur_UID, float cur_balance) { //
     int res = 0;
     string choice = "";
@@ -507,10 +540,10 @@ void trading_platform:: buyer_menu (string cur_UID, float cur_balance) { //
     while (true) {
         system("cls");
         display_buyer_menu ();
-        cout << "ÇëÊäÈë²Ù×÷:";
+        cout << "è¯·è¾“å…¥æ“ä½œ:";
         getline (cin, choice);
         while (!cin || choice.size() <=  0 || choice.size() > 1 || (choice[0] != '1' && choice[0] != '2' && choice[0] != '3' && choice[0] != '4' && choice[0] != '5' && choice[0] != '6')) {
-            cout << "·¢ÉúÒâÏë²»µ½µÄ´íÎó!ÇëÖØĞÂÊäÈë:";
+            cout << "å‘ç”Ÿæ„æƒ³ä¸åˆ°çš„é”™è¯¯!è¯·é‡æ–°è¾“å…¥:";
             cin.clear();
             cin.sync();
             getline (cin, choice);
@@ -546,29 +579,37 @@ void trading_platform:: buyer_menu (string cur_UID, float cur_balance) { //
             case 6:
                 return;
             default:
-                cout << "ÎŞĞ§²Ù×÷!" << endl;
+                cout << "æ— æ•ˆæ“ä½œ!" << endl;
                 break;
         } 
     }
 }
 
+//void user_info_menu () {}
+
+//void show_user_info (vector<user*> user_list, string UID) {}
+//7 o
+//void modify_user_info (vector<user*> user_list, string UID, vector<string> name_list) {}
+//8 o
+//void deposit (vector<user*> user_list, string UID) {}
+//9 o
 void trading_platform:: manage_user_info (string cur_UID) {
     string choice = "";
 
     while (true) {
         system("cls");
         user_info_menu ();
-        cout << "ÇëÊäÈë²Ù×÷: " << endl;
+        cout << "è¯·è¾“å…¥æ“ä½œ: " << endl;
         while (true) {
             getline (cin, choice);
             while (!cin) {
-                cout << "·¢ÉúÒâÏë²»µ½µÄ´íÎó!ÇëÖØĞÂÊäÈë:";
+                cout << "å‘ç”Ÿæ„æƒ³ä¸åˆ°çš„é”™è¯¯!è¯·é‡æ–°è¾“å…¥:";
                 cin.clear();
                 cin.sync();
                 getline (cin, choice);
             }
             if (choice.size() <= 0 || choice.size() > 1 || (choice[0] != '1' && choice[0] != '2' && choice[0] != '3' && choice[0] != '4'))
-                cout << "ÎŞĞ§²Ù×÷!ÇëÖØĞÂÊäÈë: " << endl;
+                cout << "æ— æ•ˆæ“ä½œ!è¯·é‡æ–°è¾“å…¥: " << endl;
             else break;
         }
         cin.sync();
@@ -596,19 +637,3 @@ void trading_platform:: manage_user_info (string cur_UID) {
 }
 
 void trading_platform:: save_order () {
-    ofstream ofs;
-    ofs.open (ORDER, ios::trunc);
-    if (!ofs.is_open()) {
-        cout << "Unexpected Error!";
-        exit(-1);
-    }
-    else {
-        ofs << "¶©µ¥ID,ÉÌÆ·ID,½»Ò×µ¥¼Û,ÊıÁ¿,½»Ò×Ê±¼ä,Âô¼ÒID,Âò¼ÒID" << endl;
-        for (vector<order*>::iterator it = order_list.begin(); it != order_list.end(); ++it)
-            ofs << (*it)->order_id << ',' << (*it)->commodity_id << ','
-                << fixed << setprecision(1) << (*it)->trade_price << ',' << (*it)->sold_num << ','
-                << (*it)->trade_time << ',' <<(*it)->trader_id << ','
-                << (*it)->buyer_id << endl;
-    }
-    ofs.close();
-}

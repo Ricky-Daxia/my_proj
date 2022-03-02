@@ -11,8 +11,6 @@ using namespace std;
 #define NORMAL "正常"
 #define ADMIN_NAME "admin"
 #define ADMIN_PASSWORD "123456"
-#define COMMODITY_NORMAL "销售中"
-#define COMMODITY_OUT "已下架"
 
 class sub_user_info {
 public:
