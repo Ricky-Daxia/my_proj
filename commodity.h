@@ -42,3 +42,11 @@ void best_selling (vector<commodity*>& commodity_list);
 void search_on_sale (vector<commodity*>& commodity_list);
 
 void display_details (vector<commodity*> commodity_list);
+
+//string sql_generator (vector<commodity*>&, vector<user*> user_list, vector<order*> order_list);
+
+//void sql_analyser (string sql);
+
+//void calculator (vector<user*> user_list);
+
+
