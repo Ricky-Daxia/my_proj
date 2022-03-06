@@ -1,7 +1,13 @@
 #include "calculator.h"
 
 string filter (string expr) {
+    for (int i = 0; i < expr.size(); ++i) {
+        if (i + 2 < expr.size() && expr[i] == '.' && (expr[i + 1] >= '0' && expr[i + 2] <= '9')) return "";
+        if (i + 2 < expr.size() && (expr[i] >= '0' && expr[i] <= '9') && expr[i + 1] == ' ' && (expr[i + 2] >= '0' && expr[i + 2] <= '9')) return "";
+    }
     vector<char> container;
+    string filtered = "";
+    if (expr[0] == '-') filtered += '0';
     for (int i = 0; i < expr.size(); ++i) {
         if (i + 1 < expr.size() && expr[i] == '(' && expr[i + 1] == '-') {
             container.push_back(expr[i]);
@@ -10,13 +16,17 @@ string filter (string expr) {
         else if (expr[i] == ' ') continue;
         else container.push_back(expr[i]);
     }
-    string filtered = "";
+    
     for (vector<char>:: iterator it = container.begin(); it != container.end(); ++it)
         filtered += (*it);
     return filtered;
 }
 
 bool expr_validity (string expr) {
+    if (expr.empty() || expr[0] == '.') {
+        cout << "Incorrect expression!" << endl;
+        return false;
+    }
     for (int init = 0; init < expr.size(); ++init) {
         if( expr[init] == '+' || expr[init] == '-' || expr[init] == '*' || expr[init] == '/' || expr[init] == ')' || expr[init] == '(' || expr[init] == '.' || (expr[init] >= '0' && expr[init] <= '9'))
             continue;
@@ -207,7 +217,7 @@ vector<float> eval (string expr) {
             }
         }
     }
-    cout << fixed << setprecision(1) << stk.top() << endl;
+    cout << stk.top() << endl;
     return {stk.top()};
 }
 
