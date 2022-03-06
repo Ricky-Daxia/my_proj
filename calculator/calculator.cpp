@@ -1,9 +1,22 @@
 #include "calculator.h"
 
-string filter (string expr) {
+string filter (string expr1) {
+    string expr;
+    int x = 0;
+    while (x < expr1.size()) {
+        expr += expr1[x];
+        if (expr[x] == ' ')
+            while (x + 1 < expr1.size() && expr1[x + 1] == ' ') ++x; //去除中间多于两个的空格
+        if (x + 1 < expr1.size() && expr1[x] >= '0' && expr1[x] <= '9' && operators.find(expr1[x + 1]) != operators.end()) expr += ' '; //数字和操作符之间无空格就加一个空格
+        if (x + 1 < expr1.size() && operators.find(expr1[x]) != operators.end() && expr1[x + 1] >= '0' && expr1[x + 1] <= '9') expr += ' '; //操作符与后面的数字之间的空格
+        if (x + 1 < expr1.size() && operators.find(expr1[x]) != operators.end() && operators.find(expr1[x + 1]) != operators.end()) expr += ' '; //操作符之间无空格就补空格
+        ++x; 
+    }
+
     for (int i = 0; i < expr.size(); ++i) {
         if (i + 2 < expr.size() && expr[i] == '.' && (expr[i + 1] >= '0' && expr[i + 2] <= '9')) return "";
         if (i + 2 < expr.size() && (expr[i] >= '0' && expr[i] <= '9') && expr[i + 1] == ' ' && (expr[i + 2] >= '0' && expr[i + 2] <= '9')) return "";
+        if (i + 2 < expr.size() && expr[i] == ')' && expr[i + 1] == ' ' && (expr[i + 2] >= '0' && expr[i + 2] <= '9')) return "";
     }
     vector<char> container;
     string filtered = "";
