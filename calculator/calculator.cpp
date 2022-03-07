@@ -230,7 +230,8 @@ vector<float> eval (string expr) {
             }
         }
     }
-    cout << stk.top() << endl;
+    if (stk.top() - int(stk.top()) == 0) cout << stk.top() << endl;
+    else cout << fixed << setprecision(1) << stk.top() << endl;
     return {stk.top()};
 }
 
@@ -238,7 +239,7 @@ int main() {
 
     string test;
     
-    cout << "这是一款计算器 支持的数据类型：浮点数，精确到一位小数，计算结果最终精确到一位小数（四舍五入）" << endl;
+    while (true) {cout << "这是一款计算器 支持的数据类型：浮点数，精确到一位小数，计算结果最终精确到一位小数（四舍五入）" << endl;
     cout << "使用样例: 1 + 2 - 3 输出 0.0" << endl;
     cout << "使用样例: 2 * 3 / 4 输出 1.5" << endl;
     cout << "使用样例: (2 + 4 * 3.5) * 6 输出 96.0" << endl;
@@ -249,10 +250,10 @@ int main() {
     cout << "使用样例: 1..1+1 输出 数字格式有误" << endl;
     cout << "使用样例: 1 / (2 * 4 - 8) 输出 除数为零" << endl;
     cout << "===================================" << endl;
-    cout << "例如输入 1 + 2 3 * 4 程序会识别为 1 + 23 * 4 而不认为是错误" << endl;
-    cout << "您可以输入其它字符或者奇奇怪怪的东西来验证程序的稳健性,但最要不要这样做啦!" << endl;
-    cout << "源文件放在了 https://github.com/Ricky-Daxia/my_proj/tree/3_2_2/calculator 中" << endl;
-    cout << "===================================" << endl;
+    //cout << "例如输入 1 + 2 3 * 4 程序会识别为 1 + 23 * 4 而不认为是错误" << endl;
+    //cout << "您可以输入其它字符或者奇奇怪怪的东西来验证程序的稳健性,但最要不要这样做啦!" << endl;
+    //cout << "源文件放在了 https://github.com/Ricky-Daxia/my_proj/tree/3_2_2/calculator 中" << endl;
+    //cout << "===================================" << endl;
     cout << endl << endl << "请输入要计算的表达式:";
     cin.sync();
     getline (cin, test);
@@ -260,8 +261,11 @@ int main() {
     if (expr_validity(filter(test)))
         eval (infix_to_suffix(generate_expr(filter(test))));
 
-    cout << "在计算器中验证下算得对不对?" << endl;
-    cout << "欢迎下次使用!" << endl;
+    cout << endl << endl << "在计算器中验证下算得对不对?" << endl;
+    //cout << "欢迎下次使用!" << endl;
+    test.resize(0);
+    operands.clear();
+    }
 
 
 
