@@ -14,6 +14,8 @@ string filter (string expr1) {
     }
 
     for (int i = 0; i < expr.size(); ++i) {
+        if (i + 1 < expr.size() && expr[i] == '.' && expr[i + 1] == ' ') return "";
+        if (i + 1 < expr.size() && expr[i] == ' ' && expr[i + 1] == '.') return "";
         if (i + 3 < expr.size() && (expr[i] >= '0' && expr[i] <= '9') && expr[i + 1] == '.' && (expr[i + 2] >= '0' && expr[i + 2] <= '9') && (expr[i + 3] >= '0' && expr[i + 3] <= '9')) return ""; //两位小数
         if (i + 2 < expr.size() && (expr[i] >= '0' && expr[i] <= '9') && expr[i + 1] == ' ' && (expr[i + 2] >= '0' && expr[i + 2] <= '9')) return ""; //两个数字中间无操作符
         if (i + 2 < expr.size() && expr[i] == ')' && (expr[i + 2] >= '0' && expr[i + 2] <= '9')) return "";
@@ -36,7 +38,7 @@ string filter (string expr1) {
 }
 
 bool expr_validity (string expr) {
-    if (expr.empty() || expr[0] == '.') {
+    if (expr.empty() || expr[0] == '.' || expr[expr.size() - 1] == '.') {
         cout << "Incorrect expression!" << endl;
         return false;
     }
@@ -240,9 +242,9 @@ int main() {
     string test;
     
     while (true) {cout << "这是一款计算器 支持的数据类型：浮点数，精确到一位小数，计算结果最终精确到一位小数（四舍五入）" << endl;
-    cout << "使用样例: 1 + 2 - 3 输出 0.0" << endl;
+    cout << "使用样例: 1 + 2 - 3 输出 0" << endl;
     cout << "使用样例: 2 * 3 / 4 输出 1.5" << endl;
-    cout << "使用样例: (2 + 4 * 3.5) * 6 输出 96.0" << endl;
+    cout << "使用样例: (2 + 4 * 3.5) * 6 输出 96" << endl;
     cout << "使用样例: ((4 * 3 + 2) / (6.4 - 2.4) - 10) * (6.4 - 7.2) + (-2) * 4 输出 -2.8" << endl;
     cout << "===================================" << endl;
     cout << "错误样例: 1++1 输出 操作符误用" << endl;
