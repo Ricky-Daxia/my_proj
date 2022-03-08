@@ -26,11 +26,7 @@ void display_commodity_list (vector<commodity*>& commodity_list) { //Õ¹Ê¾ÉÌÆ·ÁÐ±
     cout << endl;
 }
 
-void search_commodity (vector<commodity*>& commodity_list) { //ËÑË÷ÉÌÆ·
-    cout << "ÇëÊäÈëÉÌÆ·Ãû³Æ:";
-    string key_word = "";
-    cin.sync();
-    getline (cin, key_word);
+void search_commodity (vector<commodity*>& commodity_list,string key_word) { //ËÑË÷ÉÌÆ·
     cout << "*******************************************************************************" << endl;
     bool is_found = false, flag = true, column = false;
     for (vector<commodity*>::iterator it = commodity_list.begin(); it != commodity_list.end(); ++it) {
@@ -296,11 +292,8 @@ void best_selling (vector<commodity*>& commodity_list) {
     cout << endl;  
 }
 
-void search_on_sale (vector<commodity*>& commodity_list) { 
-    cout << "ÇëÊäÈëÉÌÆ·Ãû³Æ:";
-    string key_word = "";
-    cin.sync();
-    getline (cin, key_word);
+void search_on_sale (vector<commodity*>& commodity_list, string key_word) { 
+
     cout << "*******************************************************************************" << endl;
     bool is_found = false, flag = true, column = false;
     for (vector<commodity*>::iterator it = commodity_list.begin(); it != commodity_list.end(); ++it) {
@@ -331,11 +324,8 @@ void search_on_sale (vector<commodity*>& commodity_list) {
     cout << endl;
 }
 
-void display_details (vector<commodity*> commodity_list) {
-    cout << "ÇëÊäÈëÄúÏëÒª²é¿´µÄÉÌÆ·ID: ";
-    string search_id;
-    cin.sync();
-    getline (cin, search_id);
+void display_details (vector<commodity*> commodity_list, string search_id) {
+
     cout << "*******************************************" << endl;
     bool is_found = false;
     for (vector<commodity*>::iterator it = commodity_list.begin(); it != commodity_list.end(); ++it) 

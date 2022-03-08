@@ -10,5 +10,6 @@
         "xstring": "cpp",
         "stack": "cpp"
     },
-    "files.encoding": "gbk"
+    "files.encoding": "gbk",
+    "C_Cpp.errorSquiggles": "Disabled"
 }

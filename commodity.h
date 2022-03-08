@@ -9,6 +9,7 @@ using namespace std;
 #define COMMODITY_OUT "ÒÑÏÂ¼Ü"
 
 
+
 class commodity {
 public:
     string commodity_id;
@@ -27,7 +28,7 @@ public:
 
 void display_commodity_list (vector<commodity*>& commodity_list);
 
-void search_commodity (vector<commodity*>& commodity_list);
+void search_commodity (vector<commodity*>& commodity_list,string key_word);
 
 int remove_commodity (vector<commodity*>& commodity_list, string UID);
 
@@ -39,9 +40,9 @@ int modify_commodity (vector<commodity*>& commodity_list, string UID);
 
 void best_selling (vector<commodity*>& commodity_list);
 
-void search_on_sale (vector<commodity*>& commodity_list);
+void search_on_sale (vector<commodity*>& commodity_list, string key_word);
 
-void display_details (vector<commodity*> commodity_list);
+void display_details (vector<commodity*> commodity_list, string search_id);
 
 //string sql_generator (vector<commodity*>&, vector<user*> user_list, vector<order*> order_list);
 

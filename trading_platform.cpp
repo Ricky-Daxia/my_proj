@@ -3,6 +3,14 @@
 #include<ctime>
 #include<conio.h>
 #include<iomanip>
+vector<user*> user_list = {};
+vector<string> name_list = {};
+vector<commodity*> commodity_list = {};
+vector<order*> order_list = {};
+int user_num = 0;
+int commodity_num = 0;
+int order_num = 0;
+
 
 void Delay(int   time)//time*1000为秒数 
 { 
@@ -320,27 +328,40 @@ void trading_platform:: admin_menu () {
         }
         switch (stoi(choice))
         {
-            case 1: //查看所有商品
-                display_commodity_list (commodity_list);
+            case 1: {//查看所有商品
+                string admin_sql_1 = "SELECT * FROM commodity";
+                parse_sql_command ({admin_sql_1, "admin"});
+                //display_commodity_list (commodity_list);
                 system("pause");
-                break;
+                break;}
             case 2: //搜索商品
-                search_commodity (commodity_list);
+                {   cout << "请输入商品名称:";
+                    string key_word = "";
+                    cin.sync();
+                    getline (cin, key_word);
+                    string admin_sql_2 = "SELECT * FROM commodity WHERE 名称 CONTAINS";
+                    admin_sql_2 += key_word;
+                    parse_sql_command ({admin_sql_2, "admin", key_word});
+                    //search_commodity (commodity_list, key_word);
                 system("pause");
-                break;
+                break;}
             case 3: //下架商品
                 res = remove_commodity (commodity_list, "");
                 if (res == 1) this->save_commodity();
                 system("pause");
                 break;
             case 4: //查看所有订单
-                display_order_list (order_list);
+                {string admin_sql_4 = "SELECT * FROM order";
+                parse_sql_command ({admin_sql_4, "admin"});
+                //display_order_list (order_list);
                 system("pause");
-                break;
+                break;}
             case 5: //查看所有用户
-                display_user_list (user_list);
+                {string admin_sql_5 = "SELECT * FROM user";
+                parse_sql_command ({admin_sql_5, "admin"});
+                //display_user_list (user_list);
                 system("pause");
-                break;
+                break;}
             case 6: {//封禁用户
                 res = ban_user (user_list);
                 if (res == 1) this->save_user();
@@ -394,9 +415,11 @@ void trading_platform:: trader_menu (string cur_UID) { //卖家界面
                 system("pause");
                 break;
             case 2:
-                display_launched_commodity (commodity_list ,cur_UID);
+                {string trader_sql_2 = "SELECT * FROM commodity";
+                parse_sql_command ({trader_sql_2, "trader", cur_UID});
+                //display_launched_commodity (commodity_list ,cur_UID);
                 system("pause");
-                break;
+                break;}
             case 3:
                 res = modify_commodity (commodity_list, cur_UID);
                 if (res == 1) this->save_commodity();
@@ -408,9 +431,11 @@ void trading_platform:: trader_menu (string cur_UID) { //卖家界面
                 system("pause");
                 break;
             case 5:
-                display_trader_orders (order_list, cur_UID);
+                {string trader_sql_5 = "SELECT * FROM order";
+                parse_sql_command ({trader_sql_5, "trader", cur_UID});
+                //display_trader_orders (order_list, cur_UID);
                 system("pause");
-                break;
+                break;}
             case 6:
                 return;
             default:
@@ -519,9 +544,11 @@ void trading_platform:: buyer_menu (string cur_UID, float cur_balance) { //
         system("cls");
         switch (stoi(choice)) {
             case 1:
-                best_selling (commodity_list);
+                {string buyer_sql_1 = "SELECT * FROM commodity";
+                parse_sql_command ({buyer_sql_1, "buyer"});
+                //best_selling (commodity_list);
                 system("pause");
-                break;
+                break;}
             case 2:
                 return_info = purchase_commodity (user_list, cur_UID, commodity_list, order_list);
                 if (return_info != cur_balance) {
@@ -532,17 +559,33 @@ void trading_platform:: buyer_menu (string cur_UID, float cur_balance) { //
                 system("pause");
                 break;
             case 3:
-                search_on_sale (commodity_list);
+                {   cout << "请输入商品名称:";
+                    string key_word = "";
+                    cin.sync();
+                    getline (cin, key_word);
+                    string buyer_sql_2 = "SELECT * FROM commodity WHERE 名称 CONTAINS ";
+                    buyer_sql_2 += key_word;
+                    parse_sql_command ({buyer_sql_2, "buyer", key_word});
+                    //search_on_sale (commodity_list);
                 system("pause");
-                break;
+                break;}
             case 4:
-                display_buyer_order (order_list, cur_UID);
+                {string buyer_sql_4 = "SELECT * FROM order";
+                parse_sql_command ({buyer_sql_4, "buyer", cur_UID});
+                //display_buyer_order (order_list, cur_UID);
                 system("pause");
-                break;
+                break;}
             case 5:
-                display_details (commodity_list);
+                {   cout << "请输入您想要查看的商品ID: ";
+                    string search_id;
+                    cin.sync();
+                    getline (cin, search_id);
+                    string buyer_sql_5 = "SELECT * FROM commodity WHERE ID CONTAINS ";
+                    buyer_sql_5 += search_id;
+                    parse_sql_command ({buyer_sql_5, "buyer", search_id});
+                    //display_details (commodity_list);
                 system("pause");
-                break;
+                break;}
             case 6:
                 return;
             default:
@@ -596,6 +639,7 @@ void trading_platform:: manage_user_info (string cur_UID) {
 }
 
 void trading_platform:: save_order () {
+
     ofstream ofs;
     ofs.open (ORDER, ios::trunc);
     if (!ofs.is_open()) {
@@ -612,3 +656,18 @@ void trading_platform:: save_order () {
     }
     ofs.close();
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

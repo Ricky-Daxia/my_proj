@@ -6,6 +6,7 @@
 #include<iostream>
 using namespace std;
 
+
 class user {
 public:
     string user_name;
