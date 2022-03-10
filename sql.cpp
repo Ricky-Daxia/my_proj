@@ -116,31 +116,31 @@ void parse_sql_command (vector<string> commands) {
         //卖家发布商品和买家购买商品时调用
         //INSERT INTO commodity VALUES (val1, val2...)
         //INSERT INTO order VALUES (val1, val2...)
-        if (words[2] == sql_commodity) {}
-        else if (words[2] == sql_order) {}
+        if (words[2] == sql_commodity) {return;}
+        else if (words[2] == sql_order) {return;}
         else {cout << "无法解析的sql指令!" << endl;return;}
     }
     else if (words.size() > 4 && words[0] == sql_UPDATE && words[2] == "SET" && words[4] == "WHERE") {
         //管理员
-        //下架 UPDATE commodity SET 状态 = 已下架 WHERE ID = ...
+        //下架 UPDATE commodity SET 状态 = 已下架 WHERE ID = ... =
         //封禁用户 UPDATE commodity SET 状态 = 已下架 WHERE ID = ...
         //         UPDATE user SET 状态 = 封禁 WHERE ID = ...
 
         //用户
         //卖家
-        //下架商品 UPDATE commodity SET 状态 = 已下架 WHERE ID = ...
-        //修改商品 UPDATE commodity SET ... WHERE ID = ...
+        //下架商品 UPDATE commodity SET 状态 = 已下架 WHERE ID = ... =
+        //修改商品 UPDATE commodity SET ... WHERE ID = ... =
         //买家 
-        //购买 UPDATE commodity SET 数量 = ... WHERE ID = ...
-        //若数量为0 则生成 UPDATE commodity SET 状态 = 已下架 WHERE ID = ...
+        //购买 UPDATE commodity SET 数量 = ... WHERE ID = .. . =
+        //若数量为0 则生成 UPDATE commodity SET 状态 = 已下架 WHERE ID = ... =
         if (words[1] == sql_commodity) {
-            if (identity == sql_admin) {}
-            else if (identity == sql_trader) {}
-            else if (identity == sql_buyer) {}
+            if (identity == sql_admin) {return;}
+            else if (identity == sql_trader) {return;}
+            else if (identity == sql_buyer) {return;}
             else {cout << "无法解析的sql指令!" << endl;return;}
         }
         else if (words[1] == sql_user) {
-            if (identity == sql_admin) {}
+            if (identity == sql_admin) {return;}
             else {cout << "无法解析的sql指令!" << endl;return;}
         }
         else {cout << "无法解析的sql指令!" << endl;return;}

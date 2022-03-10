@@ -25,6 +25,107 @@ inline bool contain_space (string& str) {
     return false;
 }
 
+
+bool parse_perchase_commodity (vector<string> commands) {
+    if (commands.size() < 2 || commands[0].size() < 3) return false;
+    cout << "生成的指令为: " << commands[0] << endl;
+    Delay (1000);
+    system("cls");
+    string command = commands[0], identity = commands[1], tmp;
+    vector<string> words;
+    for (int i = 0; i < command.size(); ++i) {
+        if (command[i] != ' ') tmp += command[i];
+        else {
+            words.push_back (tmp);
+            tmp.resize (0);
+        }
+    }
+    words.push_back (tmp); //先把命令语句分块
+
+    if (words.size() > 4 && words[0] == sql_INSERT && words[3] == "VALUE" && words[2] == sql_order) {
+        //卖家发布商品和买家购买商品时调用
+        //INSERT INTO commodity VALUES (val1, val2...)
+        //INSERT INTO order VALUES (val1, val2...)
+        return true;
+        
+    }
+    cout << "无法解析的sql指令!" << endl;return false;
+}
+
+
+
+void parse_update (vector<string> commands) {
+    if (commands.size() < 2 || commands[0].size() < 3) return;
+    cout << "生成的指令为: " << commands[0] << endl;
+    Delay (1000);
+    system("cls");
+    string command = commands[0], identity = commands[1], tmp;
+    vector<string> words;
+    for (int i = 0; i < command.size(); ++i) {
+        if (command[i] != ' ') tmp += command[i];
+        else {
+            words.push_back (tmp);
+            tmp.resize (0);
+        }
+    }
+    words.push_back (tmp); //先把命令语句分块
+
+    if (words.size() > 4 && words[0] == sql_UPDATE && words[2] == "SET" && words[4] == "WHERE") {
+        //管理员
+        //下架 UPDATE commodity SET 状态 = 已下架 WHERE ID = ...
+        //封禁用户 UPDATE commodity SET 状态 = 已下架 WHERE ID = ...
+        //         UPDATE user SET 状态 = 封禁 WHERE ID = ...
+
+        //用户
+        //卖家
+        //下架商品 UPDATE commodity SET 状态 = 已下架 WHERE ID = ...
+        //修改商品 UPDATE commodity SET ... WHERE ID = ...
+        //买家 
+        //购买 UPDATE commodity SET 数量 = ... WHERE ID = ...
+        //若数量为0 则生成 UPDATE commodity SET 状态 = 已下架 WHERE ID = ...
+        if (words[1] == sql_commodity) {
+            if (identity == sql_admin) {
+                for (commodity* tmp1: commodity_list) 
+                    if (tmp1->trader_id == words[words.size() - 1])
+                        tmp1->commodity_status = COMMODITY_OUT;
+            }
+            else if (identity == sql_trader) {return;}
+            else if (identity == sql_buyer) {
+                for (commodity* tmp1: commodity_list) 
+                    if (tmp1->commodity_id == words[words.size() - 1])
+                        tmp1->commodity_status = COMMODITY_OUT;
+            }
+            else {cout << "无法解析的sql指令!" << endl;return;}
+        }
+        else if (words[1] == sql_user) {
+            if (identity == sql_admin) {return;}
+            else {cout << "无法解析的sql指令!" << endl;return;}
+        }
+        else {cout << "无法解析的sql指令!" << endl;return;}
+    }
+    else {cout << "无法解析的sql指令!" << endl;return;}//无法解析
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 trading_platform:: trading_platform () { //把用户商品初始化变成类的私有函数然后调用
     user_num = -1, commodity_num = -1, order_num = -1;
     user_list = {}, name_list = {}, commodity_list = {}, order_list = {};
@@ -363,8 +464,17 @@ void trading_platform:: admin_menu () {
                 system("pause");
                 break;}
             case 6: {//封禁用户
-                res = ban_user (user_list);
-                if (res == 1) this->save_user();
+                    cout << "请输入要封禁的用户ID:";
+                    string UID = "";
+                    cin.sync();
+                    getline (cin, UID);
+                    res = ban_user (user_list, UID);
+                    if (res == 1) {
+                        this->save_user();
+                        string update = "UPDATE commodity SET 状态=已下架 WHERE ID= " + UID;
+                        parse_update ({update, "admin"});
+                        this->save_commodity();
+                    }
                 system("pause");
                 break;
             }
@@ -504,7 +614,10 @@ float purchase_commodity (vector<user*> user_list, string UID, vector<commodity*
                         //对商品修改
                         int rest = (*it)->stock - perchase_num;
                         (*it)->stock = rest;
-                        if (rest == 0) (*it)->commodity_status = COMMODITY_OUT; 
+                        if (rest == 0) {
+                            string update_order = "UPDATE commodity SET 数量=0 WHERE ID= " + (*it)->commodity_id;
+                            parse_update ({update_order, "buyer"});
+                        } 
                         //对订单修改
                         string order_id = "T";
                         int order_cur_size = order_list.size();
@@ -512,8 +625,11 @@ float purchase_commodity (vector<user*> user_list, string UID, vector<commodity*
                         else if (order_cur_size < 99) order_id += "0" + to_string(order_cur_size + 1);
                         else order_id += to_string(order_cur_size + 1);
                         order_list.push_back(new order(order_id, (*it)->commodity_id, (*it)->price, perchase_num, trade_date, (*it)->trader_id,UID));
+                        string buyer_sql_2 = "INSERT INTO order VALUES ";
+                        buyer_sql_2 += "(" + order_id + "," + (*it)->commodity_id + "," + to_string((*it)->price) + "," + to_string(perchase_num) + "," + trade_date + "," + (*it)->trader_id + "," + UID + ")";
                         (*it1)->balance = new_balance;
-                        return new_balance;
+                        if (parse_perchase_commodity ({buyer_sql_2, "buyer"}))
+                            return new_balance;
                     }
                     cout << "**************************************************" << endl;
                     return cur_balance;
@@ -656,11 +772,6 @@ void trading_platform:: save_order () {
     }
     ofs.close();
 }
-
-
-
-
-
 
 
 

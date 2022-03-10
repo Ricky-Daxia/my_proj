@@ -4,6 +4,7 @@
 #include<string>
 #include<vector>
 #include<iomanip>
+//#include "sql.h"
 using namespace std;
 #define COMMODITY_NORMAL "销售中"
 #define COMMODITY_OUT "已下架"

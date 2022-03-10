@@ -16,6 +16,34 @@ user:: user (string UID, string user_name, string user_password, string contact,
     this->status = status;
 }
 
+void parse_ban (vector<string> commands, vector<user*>& user_list) {
+    if (commands.size() < 2 || commands[0].size() < 3) return;
+    cout << "生成的指令为: " << commands[0] << endl;
+    //Delay (1000);
+    //system("cls");
+    string command = commands[0], identity = commands[1], tmp;
+    vector<string> words;
+    for (int i = 0; i < command.size(); ++i) {
+        if (command[i] != ' ') tmp += command[i];
+        else {
+            words.push_back (tmp);
+            tmp.resize (0);
+        }
+    }
+    words.push_back (tmp); //先把命令语句分块
+
+    if (words[0] == "UPDATE" && words[1] == "user") {
+        for (user* tmp: user_list)
+            if (tmp->UID == words[words.size() - 1])
+                tmp->status = "封禁";
+        
+    }
+    cout << "无法解析的sql指令!" << endl;
+}
+
+
+
+
 void show_admin_menu () {
     cout << "======================================================================================" << endl;
     cout << "1.查看所有商品 2.搜索商品 3.下架商品 4.查看所有订单 5.查看所有用户 6.封禁用户 7.注销" << endl;
@@ -34,11 +62,7 @@ void display_user_list (vector<user*>& user_list) { //展示用户列表
     cout << endl;
 }
 
-int ban_user (vector<user*>& user_list) { //封禁用户
-    cout << "请输入要封禁的用户ID:";
-    string UID = "";
-    cin.sync();
-    getline (cin, UID);
+int ban_user (vector<user*>& user_list, string UID) { //封禁用户
     for (vector<user*>::iterator it = user_list.begin(); it != user_list.end(); ++it) {
         if ((*it)->UID == UID && (*it)->status == "正常") {
             cout << "确定要封禁该用户吗?" << endl;
@@ -59,7 +83,8 @@ int ban_user (vector<user*>& user_list) { //封禁用户
                 }
                 cout << endl;
                 if (choice[0] == 'y') {
-                    (*it)->status = "封禁";
+                    string ban = "UPDATE user SET 状态=封禁 WHERE ID= " + UID;
+                    parse_ban ({ban}, user_list);
                     cout << "封禁成功!" << endl;
                     cout << endl;
                     return 1;

@@ -27,7 +27,7 @@ void show_admin_menu ();
 
 void display_user_list (vector<user*>& user_list);
 
-int ban_user (vector<user*>& user_list);
+int ban_user (vector<user*>& user_list, string UID);
 
 void display_user_menu ();
 

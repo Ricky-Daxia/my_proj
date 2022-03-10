@@ -14,6 +14,101 @@ commodity:: commodity (string commodity_id, string commodity_name, float price,
                             this->text = text;
                         }
 
+
+
+bool parse_launch_commodity (vector<string> commands, string commodity_name, float price, int num, string text) {
+    if (commands.size() < 2 || commands[0].size() < 3) return false;
+    cout << "生成的指令为: " << commands[0] << endl;
+    //Delay (1000);
+    //system("cls");
+    string command = commands[0], identity = commands[1], tmp;
+    vector<string> words;
+    for (int i = 0; i < command.size(); ++i) {
+        if (command[i] != ' ') tmp += command[i];
+        else {
+            words.push_back (tmp);
+            tmp.resize (0);
+        }
+    }
+    words.push_back (tmp); //先把命令语句分块
+
+    if (words.size() > 4 && words[0] == "INSERT" && words[3] == "VALUE") {
+        //卖家发布商品和买家购买商品时调用
+        //INSERT INTO commodity VALUES (val1, val2...)
+        //INSERT INTO order VALUES (val1, val2...)
+        if (words[2] == "commodity") {
+            //判断发布商品合不合法
+            bool vaildity = true;
+            if (commodity_name.size() <= 0 || commodity_name.size() > 10) vaildity = false;
+            else if (price < 0 || (price * 10) - int(price * 10) != 0) vaildity = false;
+            else if (num <= 0) vaildity = false;
+            else if (text.size() > 100) vaildity = false;
+            return vaildity;
+        }
+    }
+    return false;
+}
+
+void parse_modify_commodity_info (vector<string> commands, vector<commodity*>& commodity_list) {
+    //{"UPDATE commodity SET ..=.. WHERE ID= 000", "1", "INFO"}
+    if (commands.size() < 2 || commands[0].size() < 3) return;
+    cout << "生成的指令为: " << commands[0] << endl;
+    //Delay (1000);
+    //system("cls");
+    string command = commands[0], identity = commands[1], tmp;
+    vector<string> words;
+    for (int i = 0; i < command.size(); ++i) {
+        if (command[i] != ' ') tmp += command[i];
+        else {
+            words.push_back (tmp);
+            tmp.resize (0);
+        }
+    }
+    words.push_back (tmp); //先把命令语句分块
+
+    if (words.size() > 4 && words[0] == "UPDATE" && words[2] == "SET" && words[4] == "WHERE") {
+        //管理员
+        //下架 UPDATE commodity SET 状态 = 已下架 WHERE ID = ...
+        //封禁用户 UPDATE commodity SET 状态 = 已下架 WHERE ID = ...
+        //         UPDATE user SET 状态 = 封禁 WHERE ID = ...
+
+        //用户
+        //卖家
+        //下架商品 UPDATE commodity SET 状态 = 已下架 WHERE ID = ...
+        //修改商品 UPDATE commodity SET ... WHERE ID = ...
+        //买家 
+        //购买 UPDATE commodity SET 数量 = ... WHERE ID = ...
+        //若数量为0 则生成 UPDATE commodity SET 状态 = 已下架 WHERE ID = ...
+        if (words[1] == "commodity") {
+            string ID = words[words.size() - 1];
+            if (commands[1] == "1") {
+                for (commodity* tmp: commodity_list)
+                    if (tmp->commodity_id == ID)
+                        tmp->price = stof(commands[3]);
+            } //修改价格
+            else if (commands[1] == "2") {
+                for (commodity* tmp: commodity_list)
+                    if (tmp->commodity_id == ID)
+                        tmp->text = commands[3];
+            }//修改描述
+            else if (commands[1] == "3") {
+                for (commodity* tmp: commodity_list)
+                    if (tmp->commodity_id == ID)
+                        tmp->commodity_status = COMMODITY_OUT;
+            }//下架 
+        }
+        else {cout << "无法解析的sql指令!" << endl;return;}
+    }
+    else {cout << "无法解析的sql指令!" << endl;return;}//无法解析
+}
+
+
+
+
+
+
+
+
 void display_commodity_list (vector<commodity*>& commodity_list) { //展示商品列表
     cout << "*******************************************************************************" << endl;
     cout << "商品ID     名称     价格     数量    卖家ID     上架时间     商品状态" << endl;
@@ -84,8 +179,10 @@ int remove_commodity (vector<commodity*>& commodity_list, string UID) {
                 }
                  
                 if (choice[0] == 'y') {
+                    //(*it)->commodity_status = "已下架";
+                    string modify_info = "UPDATE commodity SET 状态=已下架 WHERE ID= " + commodity_id;
+                    parse_modify_commodity_info ({modify_info, "3"}, commodity_list);
                     cout << "下架成功!" << endl;
-                    (*it)->commodity_status = "已下架";
                     return 1;
                 }
                 else if (choice[0] == 'n') return -1;
@@ -126,13 +223,17 @@ int launch_commodity (vector<commodity*>& commodity_list, string UID) { //卖家发
     cin.sync();
     getline (cin, text);
 
-    bool vaildity = true;
-    if (commodity_name.size() <= 0 || commodity_name.size() > 10) vaildity = false;
-    else if (price < 0 || (price * 10) - int(price * 10) != 0) vaildity = false;
-    else if (num <= 0) vaildity = false;
-    else if (text.size() > 100) vaildity = false;
+    string trader_sql_1 = "INSERT INTO commodity VALUES ";
+    trader_sql_1 += "(" + commodity_name + "," + to_string(price) + "," + to_string(num) + "," + text + ")";
+    bool validity = parse_launch_commodity ({trader_sql_1, "trader"}, commodity_name, price, num, text);
 
-    if (vaildity) {
+    // bool vaildity = true;
+    // if (commodity_name.size() <= 0 || commodity_name.size() > 10) vaildity = false;
+    // else if (price < 0 || (price * 10) - int(price * 10) != 0) vaildity = false;
+    // else if (num <= 0) vaildity = false;
+    // else if (text.size() > 100) vaildity = false;
+
+    if (validity) {
         cout << "请确定发布的商品信息无误!" << endl;
         for (int i = 0; i < text.size() + 5; ++i) cout << '*';
         cout << endl;
@@ -269,8 +370,16 @@ int modify_commodity (vector<commodity*>& commodity_list, string UID) { //卖家修
                 else break;
             }
             if (c[0] == 'y') {
-                if (choice[0] == 1) (*it)->price = modify_price;
-                else (*it)->text = modify_text;
+                // if (choice[0] == 1) (*it)->price = modify_price;
+                // else (*it)->text = modify_text;
+                if (choice[0] == '1') {
+                    string update_sql = "UPDATE commodity SET 价格=" + to_string(modify_price) + " WHERE ID= " + (*it)->commodity_id;
+                    parse_modify_commodity_info ({update_sql, "1", to_string(modify_price)}, commodity_list);
+                }
+                else {
+                    string update_sql = "UPDATE commodity SET 描述=" + modify_text + " WHERE ID= " + (*it)->commodity_id;
+                    parse_modify_commodity_info ({update_sql, "2", modify_text}, commodity_list);
+                }
                 cout << "修改成功!" << endl << endl;
                 return 1;
             }
@@ -342,5 +451,4 @@ void display_details (vector<commodity*> commodity_list, string search_id) {
     if (!is_found) cout << "没有找到该商品!" << endl;
     cout << "*******************************************" << endl;   
 }
-
 
