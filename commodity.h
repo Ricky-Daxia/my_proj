@@ -4,6 +4,8 @@
 #include<string>
 #include<vector>
 #include<iomanip>
+#include<ctime>
+#include<fstream>
 //#include "sql.h"
 using namespace std;
 #define COMMODITY_NORMAL "ЯњЪлжа"

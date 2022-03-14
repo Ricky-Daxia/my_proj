@@ -6,6 +6,43 @@ bool contain_all_nums (string& val) { //注册函数的辅助
     return true;
 }
 
+string sql_time () {
+    time_t rawtime = time(0);
+    struct tm localtm = *localtime(&rawtime);
+    int year = localtm.tm_year + 1900;
+    int month = localtm.tm_mon + 1;
+    int day = localtm.tm_mday;
+    int hour = localtm.tm_hour;
+    int min = localtm.tm_min;
+    int sec = localtm.tm_sec;
+    string d1, d2, d3;
+    d1 = to_string(year) + "-";
+    if (month < 10) d1 += "0";
+    d2 = to_string(month) + "-";
+    if (day < 10) d2 += "0";
+    d3 = to_string(day);
+    d1 += d2 + d3;
+    string h, m, s;
+    if (hour < 10) h = "0" + to_string(hour);
+    else h = to_string(hour);
+    if (min < 10) m = "0" + to_string(min);
+    else m = to_string(min);
+    if (sec < 10) s = "0" + to_string(sec);
+    else s = to_string(sec);
+    return d1 + " " + h + ":" + m + ":" + s + ": ";
+}
+
+void save_sql_ban (string commmands) {
+    ofstream ofs;
+    ofs.open ("commands.txt", ios::app);
+    if (!ofs.is_open()) {
+        cout << "出现了意想不到的错误!" << endl;
+        exit(-1);
+    }
+    ofs << sql_time << commmands << endl;
+    ofs.close();
+}
+
 user:: user (string UID, string user_name, string user_password, string contact, string address, float balance, string status) {
     this->UID = UID;
     this->user_name = user_name;
@@ -33,9 +70,11 @@ void parse_ban (vector<string> commands, vector<user*>& user_list) {
     words.push_back (tmp); //先把命令语句分块
 
     if (words[0] == "UPDATE" && words[1] == "user") {
-        for (user* tmp: user_list)
+        for (auto& tmp: user_list)
             if (tmp->UID == words[words.size() - 1])
-                tmp->status = "封禁";
+                {tmp->status = "封禁";
+                save_sql_ban(command);
+                }
         
     }
     cout << "无法解析的sql指令!" << endl;

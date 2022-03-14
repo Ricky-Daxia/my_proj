@@ -85,13 +85,13 @@ void parse_update (vector<string> commands) {
         //»Ù ˝¡øŒ™0 ‘Ú…˙≥… UPDATE commodity SET ◊¥Ã¨ = “—œ¬º‹ WHERE ID = ...
         if (words[1] == sql_commodity) {
             if (identity == sql_admin) {
-                for (commodity* tmp1: commodity_list) 
+                for (auto& tmp1: commodity_list) 
                     if (tmp1->trader_id == words[words.size() - 1])
                         tmp1->commodity_status = COMMODITY_OUT;
             }
             else if (identity == sql_trader) {return;}
             else if (identity == sql_buyer) {
-                for (commodity* tmp1: commodity_list) 
+                for (auto& tmp1: commodity_list) 
                     if (tmp1->commodity_id == words[words.size() - 1])
                         tmp1->commodity_status = COMMODITY_OUT;
             }
@@ -212,6 +212,7 @@ trading_platform:: trading_platform () { //∞—”√ªß…Ã∆∑≥ı ºªØ±‰≥…¿‡µƒÀΩ”–∫Ø ˝»ª∫Ûµ
         }
     }
     ifs.close();
+
 }
 
 trading_platform:: ~trading_platform () {
@@ -440,7 +441,7 @@ void trading_platform:: admin_menu () {
                     string key_word = "";
                     cin.sync();
                     getline (cin, key_word);
-                    string admin_sql_2 = "SELECT * FROM commodity WHERE √˚≥∆ CONTAINS";
+                    string admin_sql_2 = "SELECT * FROM commodity WHERE √˚≥∆ CONTAINS ";
                     admin_sql_2 += key_word;
                     parse_sql_command ({admin_sql_2, "admin", key_word});
                     //search_commodity (commodity_list, key_word);

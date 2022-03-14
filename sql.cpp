@@ -45,6 +45,48 @@
 //     //生成每一种都需要什么信息?
 // }
 
+
+string sql_time_1 () {
+    time_t rawtime = time(0);
+    struct tm localtm = *localtime(&rawtime);
+    int year = localtm.tm_year + 1900;
+    int month = localtm.tm_mon + 1;
+    int day = localtm.tm_mday;
+    int hour = localtm.tm_hour;
+    int min = localtm.tm_min;
+    int sec = localtm.tm_sec;
+    string d1, d2, d3;
+    d1 = to_string(year) + "-";
+    if (month < 10) d1 += "0";
+    d2 = to_string(month) + "-";
+    if (day < 10) d2 += "0";
+    d3 = to_string(day);
+    d1 += d2 + d3;
+    string h, m, s;
+    if (hour < 10) h = "0" + to_string(hour);
+    else h = to_string(hour);
+    if (min < 10) m = "0" + to_string(min);
+    else m = to_string(min);
+    if (sec < 10) s = "0" + to_string(sec);
+    else s = to_string(sec);
+    return d1 + " " + h + ":" + m + ":" + s + ": ";
+}
+
+void sql_save (string commmands) {
+    ofstream ofs;
+    ofs.open ("commands.txt", ios::app);
+    if (!ofs.is_open()) {
+        cout << "出现了意想不到的错误!" << endl;
+        exit(-1);
+    }
+    ofs << sql_time_1() << commmands << endl;
+    ofs.close();
+}
+
+
+
+
+
 void parse_sql_command (vector<string> commands) {
     if (commands.size() < 2 || commands[0].size() < 3) return;
     cout << "生成的指令为: " << commands[0] << endl;
@@ -85,25 +127,25 @@ void parse_sql_command (vector<string> commands) {
         //SELECT * FROM commodity
         if (words.size() == 4) {
             if (words[3] == sql_commodity) {
-                if (identity == sql_admin) {display_commodity_list (commodity_list); return;}
-                else if (identity == sql_trader) {display_launched_commodity (commodity_list, words[2]); return;}
-                else if (identity == sql_buyer) {best_selling (commodity_list); return;}
+                if (identity == sql_admin) {sql_save(command);display_commodity_list (commodity_list); return;}
+                else if (identity == sql_trader) {sql_save(command);display_launched_commodity (commodity_list, commands[2]); return;}
+                else if (identity == sql_buyer) {sql_save(command);best_selling (commodity_list); return;}
                 else {cout << "无法解析的sql指令!" << endl;return;}
             }//调用对应的函数
-            else if (words[3] == sql_user && identity == sql_admin) {display_user_list (user_list);return;}//调用对应的函数
+            else if (words[3] == sql_user && identity == sql_admin) {sql_save(command);display_user_list (user_list);return;}//调用对应的函数
             else if (words[3] == sql_order) {
-                if (identity == sql_admin) {display_order_list (order_list);return;}
-                else if (identity == sql_trader) {display_trader_orders (order_list, words[2]);return;}
-                else if (identity == sql_buyer) {display_buyer_order (order_list, words[2]);return;}
+                if (identity == sql_admin) {sql_save(command);display_order_list (order_list);return;}
+                else if (identity == sql_trader) {sql_save(command);display_trader_orders (order_list, words[2]);return;}
+                else if (identity == sql_buyer) {sql_save(command);display_buyer_order (order_list, words[2]);return;}
                 else {cout << "无法解析的sql指令!" << endl;return;}
             }//调用对应的函数
         }
         //SELECT * FROM commodity WHERE ID CONTAINS ...
         else if (words.size() > 7 && words[4] == "WHERE" && words[6] == "CONTAINS") {
             if (words[3] == sql_commodity) {
-                if (identity == sql_buyer && words[5] == "ID") {display_details (commodity_list, words[7]);return;}
-                else if (identity == sql_admin && words[5] == "名称") {search_commodity (commodity_list, words[7]);return;}
-                else if (identity == sql_buyer && words[5] == "名称") {search_on_sale (commodity_list, words[7]);return;}
+                if (identity == sql_buyer && words[5] == "ID") {sql_save(command);display_details (commodity_list, words[7]);return;}
+                else if (identity == sql_admin && words[5] == "名称") {sql_save(command);search_commodity (commodity_list, words[7]);return;}
+                else if (identity == sql_buyer && words[5] == "名称") {sql_save(command);search_on_sale (commodity_list, words[7]);return;}
                 else {cout << "无法解析的sql指令!" << endl;return;}
             }//调用对应的函数
             //else if (words[3] == sql_user) {}//调用对应的函数
