@@ -29,6 +29,7 @@ public:
     
     sub_user_info (string _UID, float _cur_balance): UID(_UID), cur_balance(_cur_balance) {}
 };
+
 void Delay(int   time);
 
 

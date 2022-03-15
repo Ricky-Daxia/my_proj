@@ -25,7 +25,6 @@ inline bool contain_space (string& str) {
     return false;
 }
 
-
 bool parse_perchase_commodity (vector<string> commands) {
     if (commands.size() < 2 || commands[0].size() < 3) return false;
     cout << "生成的指令为: " << commands[0] << endl;
@@ -42,7 +41,7 @@ bool parse_perchase_commodity (vector<string> commands) {
     }
     words.push_back (tmp); //先把命令语句分块
 
-    if (words.size() > 4 && words[0] == sql_INSERT && words[3] == "VALUE" && words[2] == sql_order) {
+    if (words.size() > 4 && words[0] == sql_INSERT && words[3] == "VALUES" && words[2] == sql_order) {
         //卖家发布商品和买家购买商品时调用
         //INSERT INTO commodity VALUES (val1, val2...)
         //INSERT INTO order VALUES (val1, val2...)
@@ -51,8 +50,6 @@ bool parse_perchase_commodity (vector<string> commands) {
     }
     cout << "无法解析的sql指令!" << endl;return false;
 }
-
-
 
 void parse_update (vector<string> commands) {
     if (commands.size() < 2 || commands[0].size() < 3) return;
@@ -390,6 +387,7 @@ vector<sub_user_info> trading_platform:: user_login () { //用户登录返回UID和余额
         }
     }
     cout << "-----用户不存在或已被封禁!-----" << endl << endl;
+    Delay (1000);
     return {};
 }
 

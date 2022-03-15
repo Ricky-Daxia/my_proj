@@ -6,7 +6,6 @@
 #include<iomanip>
 #include<ctime>
 #include<fstream>
-//#include "sql.h"
 using namespace std;
 #define COMMODITY_NORMAL "销售中"
 #define COMMODITY_OUT "已下架"

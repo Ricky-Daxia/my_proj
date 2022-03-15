@@ -16,6 +16,7 @@
                 "${workspaceFolder}/order.cpp",
                 "${workspaceFolder}/trading_platform.cpp",
                 "${workspaceFolder}/sql.cpp",
+                "${workspaceFolder}/calculator.cpp",
                 "-static"
             ],
             "options": {

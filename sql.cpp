@@ -135,8 +135,8 @@ void parse_sql_command (vector<string> commands) {
             else if (words[3] == sql_user && identity == sql_admin) {sql_save(command);display_user_list (user_list);return;}//调用对应的函数
             else if (words[3] == sql_order) {
                 if (identity == sql_admin) {sql_save(command);display_order_list (order_list);return;}
-                else if (identity == sql_trader) {sql_save(command);display_trader_orders (order_list, words[2]);return;}
-                else if (identity == sql_buyer) {sql_save(command);display_buyer_order (order_list, words[2]);return;}
+                else if (identity == sql_trader) {sql_save(command);display_trader_orders (order_list, commands[2]);return;}
+                else if (identity == sql_buyer) {sql_save(command);display_buyer_order (order_list, commands[2]);return;}
                 else {cout << "无法解析的sql指令!" << endl;return;}
             }//调用对应的函数
         }

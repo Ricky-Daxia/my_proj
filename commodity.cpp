@@ -88,8 +88,6 @@ void save_sql (string commmands) {
 }
 
 
-
-
 void parse_modify_commodity_info (vector<string> commands, vector<commodity*>& commodity_list) {
     //{"UPDATE commodity SET ..=.. WHERE ID= 000", "1", "INFO"}
     if (commands.size() < 2 || commands[0].size() < 3) return;
@@ -147,16 +145,17 @@ void parse_modify_commodity_info (vector<string> commands, vector<commodity*>& c
 
 
 
-
-
-
 void display_commodity_list (vector<commodity*>& commodity_list) { //Õ¹Ê¾ÉÌÆ·ÁÐ±í
     cout << "*******************************************************************************" << endl;
-    cout << "ÉÌÆ·ID     Ãû³Æ     ¼Û¸ñ     ÊýÁ¿    Âô¼ÒID     ÉÏ¼ÜÊ±¼ä     ÉÌÆ·×´Ì¬" << endl;
+    cout << "ÉÌÆ·ID     Ãû³Æ                  ¼Û¸ñ    ÊýÁ¿   Âô¼ÒID  ÉÏ¼ÜÊ±¼ä   ÉÌÆ·×´Ì¬" << endl;
     for (vector<commodity*>::iterator it = commodity_list.begin(); it != commodity_list.end(); ++it) {
-        cout << (*it)->commodity_id << "  " << (*it)->commodity_name << "  " << fixed << setprecision(1) <<(*it)->price << "    "
-            << setprecision(0) <<(*it)->stock << "  " << (*it)->trader_id << "   " << (*it)->launch_time
-            << "   " << (*it)->commodity_status << endl;
+        cout << (*it)->commodity_id << "       ";
+        cout << left << setw(20) << (*it)->commodity_name << "  ";
+        cout << left << setw(5) << fixed << setprecision(1) <<(*it)->price << "    ";
+        cout << left << setw(5) <<(*it)->stock << "  ";
+        cout << left << setw(4) << (*it)->trader_id << "   ";
+        cout << left << setw(10) << (*it)->launch_time << "  ";
+        cout << left << setw(10) << (*it)->commodity_status << endl;
     }
     cout << "*******************************************************************************" << endl;
     cout << endl;
@@ -179,12 +178,16 @@ void search_commodity (vector<commodity*>& commodity_list,string key_word) { //Ë
         }
         if (is_found) {
             if (!column) {
-                cout << "ÉÌÆ·ID     Ãû³Æ     ¼Û¸ñ     ÊýÁ¿     ÃèÊö     Âô¼ÒID     ÉÏ¼ÜÊ±¼ä     ÉÌÆ·×´Ì¬" << endl;
+                cout << "ÉÌÆ·ID     Ãû³Æ                  ¼Û¸ñ    ÊýÁ¿   Âô¼ÒID  ÉÏ¼ÜÊ±¼ä   ÉÌÆ·×´Ì¬" << endl;
                 column = true;
             }
-             cout << (*it)->commodity_id << "  " << (*it)->commodity_name << "  " << fixed << setprecision(1) << (*it)->price << "    "
-                << setprecision(0) <<(*it)->stock << "  " << (*it)->text << "  " << (*it)->trader_id << "   " << (*it)->launch_time
-                << "   " << (*it)->commodity_status << endl;
+            cout << (*it)->commodity_id << "       ";
+            cout << left << setw(20) << (*it)->commodity_name << "  ";
+            cout << left << setw(5) << fixed << setprecision(1) <<(*it)->price << "    ";
+            cout << left << setw(5) <<(*it)->stock << "  ";
+            cout << left << setw(4) << (*it)->trader_id << "   ";
+            cout << left << setw(10) << (*it)->launch_time << "  ";
+            cout << left << setw(10) << (*it)->commodity_status << endl;
         }
     }
     if (!column) cout << "Ã»ÓÐÕÒµ½ÄúÏëÒªµÄÉÌÆ·!¼´½«·µ»Ø³õÊ¼½çÃæ" << endl;
@@ -334,11 +337,17 @@ int launch_commodity (vector<commodity*>& commodity_list, string UID) { //Âô¼Ò·¢
 
 void display_launched_commodity (vector<commodity*>& commodity_list, string UID) { //Õ¹Ê¾Âô¼ÒÉÌÆ·ÁÐ±í
     cout << "**************************************************************************" << endl;
-    cout << "ÉÌÆ·ID     Ãû³Æ     ¼Û¸ñ     ÊýÁ¿    ÉÏ¼ÜÊ±¼ä     ÉÌÆ·×´Ì¬" << endl;
+    cout << "ÉÌÆ·ID     Ãû³Æ                  ¼Û¸ñ    ÊýÁ¿   ÉÏ¼ÜÊ±¼ä   ÉÌÆ·×´Ì¬" << endl;
     for (vector<commodity*>::iterator it = commodity_list.begin(); it != commodity_list.end(); ++it) 
         if ((*it)->trader_id == UID)
-            cout << (*it)->commodity_id << "  " << (*it)->commodity_name << "  " << fixed << setprecision(1) <<(*it)->price << "    "
-                << setprecision(0) << (*it)->stock << "  " << (*it)->launch_time << "   " << (*it)->commodity_status << endl;
+            {
+                cout << (*it)->commodity_id << "       ";
+                cout << left << setw(20) << (*it)->commodity_name << "  ";
+                cout << left << setw(5) << fixed << setprecision(1) <<(*it)->price << "    ";
+                cout << left << setw(5) <<(*it)->stock << "  ";
+                cout << left << setw(10) << (*it)->launch_time << "  ";
+                cout << left << setw(10) << (*it)->commodity_status << endl;
+            }
     cout << "**************************************************************************" << endl;
     cout << endl;
 
@@ -453,11 +462,15 @@ int modify_commodity (vector<commodity*>& commodity_list, string UID) { //Âô¼ÒÐÞ
 
 void best_selling (vector<commodity*>& commodity_list) {
     cout << "*******************************************************************************" << endl;
-    cout << "ÉÌÆ·ID     Ãû³Æ     ¼Û¸ñ     ÉÏ¼ÜÊ±¼ä     Âô¼ÒID" << endl;
+    cout << "ÉÌÆ·ID     Ãû³Æ                  ¼Û¸ñ    Âô¼ÒID  ÉÏ¼ÜÊ±¼ä" << endl;
     for (vector<commodity*>::iterator it = commodity_list.begin(); it != commodity_list.end(); ++it) {
         if ((*it)->commodity_status == COMMODITY_NORMAL)
-            cout << (*it)->commodity_id << "  " << (*it)->commodity_name << "  " << fixed << setprecision(1) << (*it)->price 
-                << "   " << (*it)->launch_time << "   " << (*it)->trader_id << endl;
+            {cout << (*it)->commodity_id << "       ";
+            cout << left << setw(20) << (*it)->commodity_name << "  ";
+            cout << left << setw(5) << fixed << setprecision(1) <<(*it)->price << "    ";
+            cout << left << setw(4) << (*it)->trader_id << "   ";
+            cout << left << setw(10) << (*it)->launch_time << "  ";
+            cout << endl;}
     }
     cout << "*******************************************************************************" << endl;
     cout << endl;  
@@ -481,11 +494,15 @@ void search_on_sale (vector<commodity*>& commodity_list, string key_word) {
         }
         if (is_found && (*it)->commodity_status == COMMODITY_NORMAL) {
             if (!column) {
-                cout << "ÉÌÆ·ID     Ãû³Æ     ¼Û¸ñ     Âô¼ÒID     ÉÏ¼ÜÊ±¼ä" << endl;
+                cout << "ÉÌÆ·ID     Ãû³Æ                  ¼Û¸ñ    Âô¼ÒID  ÉÏ¼ÜÊ±¼ä" << endl;
                 column = true;
             }
-            cout << (*it)->commodity_id << "   " << (*it)->commodity_name << "   " << fixed << setprecision(1) << (*it)->price << "    "
-                        << (*it)->trader_id << "   " << (*it)->launch_time << endl;
+            cout << (*it)->commodity_id << "       ";
+            cout << left << setw(20) << (*it)->commodity_name << "  ";
+            cout << left << setw(5) << fixed << setprecision(1) <<(*it)->price << "    ";
+            cout << left << setw(4) << (*it)->trader_id << "   ";
+            cout << left << setw(10) << (*it)->launch_time << "  ";
+            cout << endl;
         }
         is_found = false, flag = true;
     }

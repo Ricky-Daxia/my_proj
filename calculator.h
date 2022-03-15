@@ -27,3 +27,5 @@ string generate_expr (string expr);
 string infix_to_suffix (string expr);
 
 vector<float> eval (string expr);
+
+vector<float> API (string test);

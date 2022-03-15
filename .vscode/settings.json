@@ -8,7 +8,9 @@
         "iosfwd": "cpp",
         "vector": "cpp",
         "xstring": "cpp",
-        "stack": "cpp"
+        "stack": "cpp",
+        "iomanip": "cpp",
+        "ios": "cpp"
     },
     "files.encoding": "gbk",
     "C_Cpp.errorSquiggles": "Disabled"

@@ -91,13 +91,17 @@ void show_admin_menu () {
 }
 
 void display_user_list (vector<user*>& user_list) { //展示用户列表
-    cout << "*******************************************************************************" << endl;
+    cout << "*********************************************************************************************************************" << endl;
+    cout << "用户ID     用户名        联系方式                  地址                                        钱包余额    用户状态" << endl;
     for (vector<user*>::iterator it = user_list.begin(); it != user_list.end(); ++it) {
-        cout << "用户ID         用户名        联系方式        地址        钱包余额" << endl;
-        cout << (*it)->UID << "     " << (*it)->user_name << "     " << (*it)->contact << "     "
-            << (*it)->address << "     " << fixed << setprecision(1) << (*it)->balance << endl;
+            cout << left << setw(4) << (*it)->UID << "       ";
+            cout << left << setw(10) << (*it)->user_name << "    ";
+            cout << left << setw(20) << (*it)->contact << "      ";
+            cout << left << setw(40) << (*it)->address << "     ";
+            cout << left << fixed << setprecision(1) << setw(10) << (*it)->balance << "   ";
+            cout << left << setw(10) <<(*it)->status << endl;
     }
-    cout << "*******************************************************************************" << endl;
+    cout << "*********************************************************************************************************************" << endl;
     cout << endl;
 }
 
@@ -105,11 +109,14 @@ int ban_user (vector<user*>& user_list, string UID) { //封禁用户
     for (vector<user*>::iterator it = user_list.begin(); it != user_list.end(); ++it) {
         if ((*it)->UID == UID && (*it)->status == "正常") {
             cout << "确定要封禁该用户吗?" << endl;
-            cout << "*******************************************************************************" << endl;
-            cout << "用户ID         用户名        联系方式        地址        钱包余额" << endl;
-            cout << (*it)->UID << "     " << (*it)->user_name << "     " << (*it)->contact << "     "
-                << (*it)->address << "     " << fixed << setprecision(1) <<(*it)->balance << endl;
-            cout << "*******************************************************************************" << endl;
+            cout << "*************************************************************************************************************" << endl;
+            cout << "用户ID     用户名        联系方式                  地址                                        钱包余额" << endl;
+            cout << left << setw(4) << (*it)->UID << "       ";
+            cout << left << setw(10) << (*it)->user_name << "    ";
+            cout << left << setw(20) << (*it)->contact << "      ";
+            cout << left << setw(40) << (*it)->address << "     ";
+            cout << left << fixed << setprecision(1) <<(*it)->balance << endl;
+            cout << "*************************************************************************************************************" << endl;
             cout << "请选择(y/n):";
             string choice = "";
             while (true) {
