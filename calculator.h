@@ -7,16 +7,9 @@
 #include<iomanip>
 using namespace std;
 
-unordered_map<char, int> operators {
-    {'+', 1},
-    {'-', 2},
-    {'*', 3},
-    {'/', 4},
-    {'(', 5},
-    {')', 6}
-};
+extern unordered_map<char, int> operators;
 
-unordered_map<char, float> operands {};
+extern unordered_map<char, double> operands;
 
 string filter (string expr);
 
@@ -26,6 +19,6 @@ string generate_expr (string expr);
 
 string infix_to_suffix (string expr);
 
-vector<float> eval (string expr);
+vector<double> eval (string expr);
 
-vector<float> API (string test);
+vector<double> API (string test);

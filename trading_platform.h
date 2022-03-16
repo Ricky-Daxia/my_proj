@@ -25,9 +25,9 @@ extern int order_num;
 class sub_user_info {
 public:
     string UID;
-    float cur_balance;
+    double cur_balance;
     
-    sub_user_info (string _UID, float _cur_balance): UID(_UID), cur_balance(_cur_balance) {}
+    sub_user_info (string _UID, double _cur_balance): UID(_UID), cur_balance(_cur_balance) {}
 };
 
 void Delay(int   time);
@@ -45,7 +45,7 @@ public:
 
     void trader_menu (string cur_UID);
 
-    void buyer_menu (string cur_UID, float cur_balance);
+    void buyer_menu (string cur_UID, double cur_balance);
 
     int admin_login ();
 

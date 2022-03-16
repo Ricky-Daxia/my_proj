@@ -1,5 +1,16 @@
 #include "calculator.h"
 
+unordered_map<char, int> operators {
+    {'+', 1},
+    {'-', 2},
+    {'*', 3},
+    {'/', 4},
+    {'(', 5},
+    {')', 6}
+};
+
+unordered_map<char, double> operands{};
+
 string filter (string expr1) {
     string expr;
     int x = 0;
@@ -173,9 +184,9 @@ string infix_to_suffix (string expr) {
     return suffix_expr;
 }
 
-vector<float> eval (string expr) {
-    stack<float> stk;
-    vector<float> res;
+vector<double> eval (string expr) {
+    stack<double> stk;
+    vector<double> res;
 
     for (int i = 0; i < expr.size(); ++i) {
         if (expr[i] != '+' && expr[i] != '-' && expr[i] != '*' && expr[i] != '/')
@@ -185,45 +196,45 @@ vector<float> eval (string expr) {
             {
             case '+':
                 {
-                    float a = stk.top();
+                    double a = stk.top();
                     stk.pop();
-                    float b = stk.top();
+                    double b = stk.top();
                     stk.pop();
-                    float c = a + b;
+                    double c = a + b;
                     stk.push(c);
                     break;
                 }
             case '-':
                 {
-                    float a = stk.top();
+                    double a = stk.top();
                     stk.pop();
-                    float b = stk.top();
+                    double b = stk.top();
                     stk.pop();
-                    float c = b - a;
+                    double c = b - a;
                     stk.push(c);
                     break;
                 }
             case '*':
                 {
-                    float a = stk.top();
+                    double a = stk.top();
                     stk.pop();
-                    float b = stk.top();
+                    double b = stk.top();
                     stk.pop();
-                    float c = a * b;
+                    double c = a * b;
                     stk.push(c);
                     break;
                 }
             case '/':
                 {
-                    float b = stk.top();
+                    double b = stk.top();
                     stk.pop();
-                    float a = stk.top();
+                    double a = stk.top();
                     stk.pop();
                     if (b == 0) {
                         cout << "divided by zero!" << endl;
                         return {};
                     }
-                    float c = a / b;
+                    double c = a / b;
                     stk.push(c);
                     break;
                 }
@@ -233,11 +244,12 @@ vector<float> eval (string expr) {
         }
     }
     if (stk.top() - int(stk.top()) == 0) cout << stk.top() << endl;
-    else cout << fixed << setprecision(1) << stk.top() << endl;
+    //else cout << fixed << setprecision(1) << stk.top() << endl;
     return {stk.top()};
 }
 
-vector<float> API (string test) {
+vector<double> API (string test) {
+    operands.clear();
     if (expr_validity(filter(test)))
         return eval (infix_to_suffix(generate_expr(filter(test))));
     else return {};
@@ -267,7 +279,7 @@ vector<float> API (string test) {
 //     getline (cin, test);
 
 //     if (expr_validity(filter(test)))
-//         eval (infix_to_suffix(generate_expr(filter(test))));
+//         cout << eval(infix_to_suffix(generate_expr(filter(test))))[0];
 
 //     cout << endl << endl << "在计算器中验证下算得对不对?" << endl;
 //     //cout << "欢迎下次使用!" << endl;

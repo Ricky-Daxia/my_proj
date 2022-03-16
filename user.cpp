@@ -43,7 +43,7 @@ void save_sql_ban (string commmands) {
     ofs.close();
 }
 
-user:: user (string UID, string user_name, string user_password, string contact, string address, float balance, string status) {
+user:: user (string UID, string user_name, string user_password, string contact, string address, double balance, string status) {
     this->UID = UID;
     this->user_name = user_name;
     this->user_password = user_password;
@@ -51,6 +51,10 @@ user:: user (string UID, string user_name, string user_password, string contact,
     this->address = address;
     this->balance = balance;
     this->status = status;
+    string tmp = to_string(balance);
+    if (!tmp.find('.')) this->expr = tmp;
+    else tmp = tmp.substr(0, tmp.find('.') + 2);
+    expr = tmp;
 }
 
 void parse_ban (vector<string> commands, vector<user*>& user_list) {
@@ -184,7 +188,8 @@ void show_user_info (vector<user*> user_list, string UID) {
             cout << "用户名: " << (*it)->user_name << endl;
             cout << "联系方式: " << (*it)->contact << endl;
             cout << "地址: " << (*it)->address << endl;
-            cout << "钱包余额: " << fixed << setprecision(1) <<(*it)->balance << endl;
+            cout << "钱包余额: ";
+            cout << API((*it)->expr)[0] << endl;
             cout << "*********************" << endl;
             cout << endl;
         }
@@ -281,7 +286,7 @@ void deposit (vector<user*> user_list, string UID) {
     for (vector<user*>::iterator it = user_list.begin(); it != user_list.end(); ++it)
         if ((*it)->UID == UID) {
             cout << "请输入充值金额: ";
-            float amount = 0;
+            double amount = 0;
             while (true) {
                 cin >> amount;
                 while (!cin) {
@@ -297,8 +302,17 @@ void deposit (vector<user*> user_list, string UID) {
                 if (vaildity) break;
                 else cout << endl << "金额不符合规范!请重新输入金额: ";
             }
-            float new_amount = (*it)->balance + amount;
+            // string str_amount = to_string(amount);
+            // if (str_amount.find('.')) str_amount = str_amount.substr(0, str_amount.find(".") + 2);
+            // string str_balance = to_string((*it)->balance);
+            // string eval_res = str_balance.substr(0, str_balance.find('.') + 2) + "+" + str_amount;
+            // (*it)->balance = API (eval_res)[0];
+            double new_amount = (*it)->balance + amount;
             (*it)->balance = new_amount;
-            cout << "充值成功,当前余额: " << new_amount << endl;
+            string tmp = to_string(new_amount);
+            if (!tmp.find('.')) (*it)->expr = tmp;
+            else tmp = tmp.substr(0, tmp.find('.') + 2);
+            (*it)->expr += "+" + tmp;
+            cout << "充值成功,当前余额: " << (*it)->balance << endl;
         } 
 }

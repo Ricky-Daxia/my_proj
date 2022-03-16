@@ -29,7 +29,7 @@ bool parse_perchase_commodity (vector<string> commands) {
     if (commands.size() < 2 || commands[0].size() < 3) return false;
     cout << "Éú³ÉµÄÖ¸ÁîÎª: " << commands[0] << endl;
     Delay (1000);
-    system("cls");
+    //system("cls");
     string command = commands[0], identity = commands[1], tmp;
     vector<string> words;
     for (int i = 0; i < command.size(); ++i) {
@@ -55,7 +55,7 @@ void parse_update (vector<string> commands) {
     if (commands.size() < 2 || commands[0].size() < 3) return;
     cout << "Éú³ÉµÄÖ¸ÁîÎª: " << commands[0] << endl;
     Delay (1000);
-    system("cls");
+    //system("cls");
     string command = commands[0], identity = commands[1], tmp;
     vector<string> words;
     for (int i = 0; i < command.size(); ++i) {
@@ -150,7 +150,7 @@ trading_platform:: trading_platform () { //°ÑÓÃ»§ÉÌÆ·³õÊ¼»¯±ä³ÉÀàµÄË½ÓÐº¯ÊýÈ»ºóµ
                     else temp.append(1, buffer[i]);
                 }
                 //´æÈë
-                user_list.push_back(new user(attributes[0], attributes[1], attributes[2], attributes[3], attributes[4], stof(attributes[5]), temp));
+                user_list.push_back(new user(attributes[0], attributes[1], attributes[2], attributes[3], attributes[4], stod(attributes[5]), temp));
                 name_list.push_back(attributes[1]);
                 temp = "", attributes = {}, buffer = ""; //Çå¿Õ
             }
@@ -177,7 +177,7 @@ trading_platform:: trading_platform () { //°ÑÓÃ»§ÉÌÆ·³õÊ¼»¯±ä³ÉÀàµÄË½ÓÐº¯ÊýÈ»ºóµ
                     }
                     else temp.append(1, buffer[i]);
                 }
-            commodity_list.push_back(new commodity(attributes[0], attributes[1], stof(attributes[2]), stoi(attributes[3]), attributes[4], attributes[5], attributes[6], temp));
+            commodity_list.push_back(new commodity(attributes[0], attributes[1], stod(attributes[2]), stoi(attributes[3]), attributes[4], attributes[5], attributes[6], temp));
             temp = "", attributes = {}, buffer = "";
             }
         }
@@ -203,7 +203,7 @@ trading_platform:: trading_platform () { //°ÑÓÃ»§ÉÌÆ·³õÊ¼»¯±ä³ÉÀàµÄË½ÓÐº¯ÊýÈ»ºóµ
                     }
                     else temp.append(1, buffer[i]);
                 }
-            order_list.push_back(new order(attributes[0], attributes[1], stof(attributes[2]), stoi(attributes[3]), attributes[4], attributes[5], temp));
+            order_list.push_back(new order(attributes[0], attributes[1], stod(attributes[2]), stoi(attributes[3]), attributes[4], attributes[5], temp));
             temp = "", attributes = {}, buffer = "";
             }
         }
@@ -275,7 +275,7 @@ void trading_platform:: save_user () { //±£´æÓÃ»§µ½ÎÄ¼þÖÐ
 void trading_platform:: sign_up () { //»ù±¾Íê³É¼ì²é(²»ÄÜ²éÖÐÎÄ)
     string user_password = "", contact = "";
     string user_name = "", address = "";
-    float balance = 0.0;
+    double balance = 0.0;
 
     cout << "ÇëÊäÈëÓÃ»§Ãû(²»³¬¹ý10¸ö×Ö·û):";
     cin.sync();
@@ -570,8 +570,10 @@ int trading_platform:: sub_user_menu () {
     return stoi(choice);
 }
 
-float purchase_commodity (vector<user*> user_list, string UID, vector<commodity*>& commodity_list, vector<order*>& order_list) {
-    float cur_balance = 0;
+double purchase_commodity (vector<user*> user_list, string UID, vector<commodity*>& commodity_list, vector<order*>& order_list) {
+    double cur_balance = 0, new_balance = 0;
+    bool has_perchased = false, is_found = false;
+    string trader_UID = "", deal = "";
     for (vector<user*>::iterator it1 = user_list.begin(); it1 != user_list.end(); ++it1)
         if ((*it1)->UID == UID) {
             cur_balance = (*it1)->balance; 
@@ -592,11 +594,14 @@ float purchase_commodity (vector<user*> user_list, string UID, vector<commodity*
             cout << "**************************************************" << endl;
             
             for (vector<commodity*>::iterator it = commodity_list.begin(); it != commodity_list.end(); ++it) 
-                if ((*it)->commodity_id == search_id && (*it)->commodity_status == COMMODITY_NORMAL) {
+                if ((*it)->commodity_id == search_id && (*it)->commodity_status == COMMODITY_NORMAL && (*it)->trader_id != UID) {
+                    is_found = true;
                     if ((*it)->stock < perchase_num)
-                        cout << "ÉÌÆ·¿â´æ²»×ã!" << endl;
+                        {cout << "ÉÌÆ·¿â´æ²»×ã!" << endl;
+                        cout << "**************************************************" << endl;}
                     else if (cur_balance < (*it)->price * perchase_num)
-                        cout << "Óà¶î²»×ã!" << endl;
+                        {cout << "Óà¶î²»×ã!" << endl;
+                        cout << "**************************************************" << endl;}
                     else {
                         cout << "½»Ò×ÌáÐÑ!" << endl;
                         //Éú³É½»Ò×Ê±¼äºÍÐÂµÄÓà¶î
@@ -608,8 +613,12 @@ float purchase_commodity (vector<user*> user_list, string UID, vector<commodity*
                         cout << "½»Ò×µ¥¼Û: " << fixed << setprecision(1) <<(*it)->price << endl;
                         cout << "½»Ò×ÊýÁ¿: " << perchase_num << endl;
                         cout << "½»Ò××´Ì¬: ½»Ò×³É¹¦" << endl;
-                        float new_balance = cur_balance - (*it)->price * perchase_num;
-                        cout << "ÄúµÄÓà¶î: " << fixed << setprecision(1) <<new_balance << endl;
+                        trader_UID = (*it)->trader_id;
+                        deal = to_string(perchase_num) + "*" + to_string((*it)->price).substr(0, to_string((*it)->price).find('.') + 2);
+                        (*it1)->expr += "-" + deal;
+                        new_balance = cur_balance - (*it)->price * perchase_num;
+                        //new_balance = API(str_new_balance)[0];
+                        cout << "ÄúµÄÓà¶î: " << fixed << setprecision(1) << new_balance << endl;
                         //¶ÔÉÌÆ·ÐÞ¸Ä
                         int rest = (*it)->stock - perchase_num;
                         (*it)->stock = rest;
@@ -628,21 +637,27 @@ float purchase_commodity (vector<user*> user_list, string UID, vector<commodity*
                         buyer_sql_2 += "(" + order_id + "," + (*it)->commodity_id + "," + to_string((*it)->price) + "," + to_string(perchase_num) + "," + trade_date + "," + (*it)->trader_id + "," + UID + ")";
                         (*it1)->balance = new_balance;
                         if (parse_perchase_commodity ({buyer_sql_2, "buyer"}))
-                            return new_balance;
+                            has_perchased = true;
                     }
-                    cout << "**************************************************" << endl;
-                    return cur_balance;
                 }
-            cout << "Ã»ÓÐÕÒµ½¸ÃÉÌÆ·!" << endl;
-            cout << "**************************************************" << endl;
+            if (!is_found) {cout << "Ã»ÓÐÕÒµ½¸ÃÉÌÆ·!" << endl;
+            cout << "**************************************************" << endl;}
     }
-    return cur_balance;
+    if (has_perchased)
+    {for (vector<user*>::iterator it1 = user_list.begin(); it1 != user_list.end(); ++it1)
+        if ((*it1)->UID == trader_UID)
+            //cout << to_string((*it1)->balance).substr(0, to_string((*it1)->balance).find('.') + 2) + deal << endl;
+            {(*it1)->balance = API(to_string((*it1)->balance).substr(0, to_string((*it1)->balance).find('.') + 2) + "+" + deal)[0];
+            (*it1)->expr += "+" + deal;}
+        return new_balance;
+        }
+    else return cur_balance;
 }
 
-void trading_platform:: buyer_menu (string cur_UID, float cur_balance) { //
+void trading_platform:: buyer_menu (string cur_UID, double cur_balance) { //
     int res = 0;
     string choice = "";
-    float return_info = 0;
+    double return_info = 0;
 
     while (true) {
         system("cls");

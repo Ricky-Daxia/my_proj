@@ -16,7 +16,7 @@ class commodity {
 public:
     string commodity_id;
     string commodity_name;
-    float price;
+    double price;
     string launch_time;
     string trader_id;
     int stock;
@@ -24,7 +24,7 @@ public:
     string text;
 
     commodity (string commodity_id, string commodity_name, 
-                float price, int stock, string text, 
+                double price, int stock, string text, 
                 string trader_id, string launch_time, string commodity_status);
 };
 

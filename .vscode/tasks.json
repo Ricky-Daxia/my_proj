@@ -11,12 +11,12 @@
                 "-o",
                 //"-I","${workspaceFolder}/include",
                 "${fileDirname}\\${fileBasenameNoExtension}.exe",
+                "${workspaceFolder}/calculator.cpp",
                 "${workspaceFolder}/user.cpp",
                 "${workspaceFolder}/commodity.cpp",
                 "${workspaceFolder}/order.cpp",
                 "${workspaceFolder}/trading_platform.cpp",
                 "${workspaceFolder}/sql.cpp",
-                "${workspaceFolder}/calculator.cpp",
                 "-static"
             ],
             "options": {

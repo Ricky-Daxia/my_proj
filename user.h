@@ -1,5 +1,5 @@
 #pragma once
-//#include "calculator.h"
+#include "calculator.h"
 #include<string>
 #include<string.h>
 #include<iomanip>
@@ -17,10 +17,12 @@ public:
     string UID;
     string contact;
     string address;
-    float balance;
+    double balance;
     string status;
 
-    user (string UID, string user_name, string user_password, string contact, string address, float balance, string status);
+    string expr;
+
+    user (string UID, string user_name, string user_password, string contact, string address, double balance, string status);
 
     
 };

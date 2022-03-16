@@ -1,7 +1,7 @@
 #include "commodity.h"
 
 
-commodity:: commodity (string commodity_id, string commodity_name, float price, 
+commodity:: commodity (string commodity_id, string commodity_name, double price, 
                         int stock, string text, string trader_id, 
                         string launch_time, string commodity_status) {
                             this->commodity_id = commodity_id;
@@ -16,7 +16,7 @@ commodity:: commodity (string commodity_id, string commodity_name, float price,
 
 
 
-bool parse_launch_commodity (vector<string> commands, string commodity_name, float price, int num, string text) {
+bool parse_launch_commodity (vector<string> commands, string commodity_name, double price, int num, string text) {
     if (commands.size() < 2 || commands[0].size() < 3) return false;
     cout << "Éú³ÉµÄÖ¸ÁîÎª: " << commands[0] << endl;
     //Delay (1000);
@@ -163,20 +163,20 @@ void display_commodity_list (vector<commodity*>& commodity_list) { //Õ¹Ê¾ÉÌÆ·ÁÐ±
 
 void search_commodity (vector<commodity*>& commodity_list,string key_word) { //ËÑË÷ÉÌÆ·
     cout << "*******************************************************************************" << endl;
-    bool is_found = false, flag = true, column = false;
+    bool is_found = false, column = false;
     for (vector<commodity*>::iterator it = commodity_list.begin(); it != commodity_list.end(); ++it) {
-        for (int i = 0; i < (*it)->commodity_name.size(); ++i) {
-            if (key_word[0] == (*it)->commodity_name[i]) {
-                for (int j = 0; j < key_word.size(); ++j)
-                    if (i + j >= (*it)->commodity_name.size() || key_word[j] != (*it)->commodity_name[i + j]) {
-                        flag = false;
-                        break;
-                    }
-                if (flag) is_found = true;
-                break;
-            }
-        }
-        if (is_found) {
+        // for (int i = 0; i < (*it)->commodity_name.size(); ++i) {
+        //     if (key_word[0] == (*it)->commodity_name[i]) {
+        //         for (int j = 0; j < key_word.size(); ++j)
+        //             if (i + j >= (*it)->commodity_name.size() || key_word[j] != (*it)->commodity_name[i + j]) {
+        //                 flag = false;
+        //                 break;
+        //             }
+        //         if (flag) is_found = true;
+        //         break;
+        //     }
+        // }
+        if ((*it)->commodity_name.find(key_word) != string::npos) {
             if (!column) {
                 cout << "ÉÌÆ·ID     Ãû³Æ                  ¼Û¸ñ    ÊýÁ¿   Âô¼ÒID  ÉÏ¼ÜÊ±¼ä   ÉÌÆ·×´Ì¬" << endl;
                 column = true;
@@ -240,7 +240,7 @@ int remove_commodity (vector<commodity*>& commodity_list, string UID) {
 
 int launch_commodity (vector<commodity*>& commodity_list, string UID) { //Âô¼Ò·¢²¼ÉÌÆ·
     string commodity_name = "", text = "";
-    float price = 0;
+    double price = 0;
     int num = 0;
     cout << "ÇëÊäÈëÉÌÆ·Ãû³Æ(²»³¬¹ý10¸ö×Ö·û):";
     cin.sync();
@@ -355,7 +355,7 @@ void display_launched_commodity (vector<commodity*>& commodity_list, string UID)
 
 int modify_commodity (vector<commodity*>& commodity_list, string UID) { //Âô¼ÒÐÞ¸ÄÉÌÆ·
     string commodity_id = "";
-    float modify_price = 0; 
+    double modify_price = 0; 
     string modify_text = "";
     cout << "ÇëÊäÈë±»ÐÞ¸ÄÉÌÆ·µÄID:";
     cin.sync();
@@ -479,20 +479,20 @@ void best_selling (vector<commodity*>& commodity_list) {
 void search_on_sale (vector<commodity*>& commodity_list, string key_word) { 
 
     cout << "*******************************************************************************" << endl;
-    bool is_found = false, flag = true, column = false;
+    bool is_found = false, column = false;
     for (vector<commodity*>::iterator it = commodity_list.begin(); it != commodity_list.end(); ++it) {
-        for (int i = 0; i < (*it)->commodity_name.size(); ++i) {
-            if (key_word[0] == (*it)->commodity_name[i]) {
-                for (int j = 0; j < key_word.size(); ++j)
-                    if (i + j >= (*it)->commodity_name.size() || key_word[j] != (*it)->commodity_name[i + j]) {
-                        flag = false;
-                        break;
-                    }
-                if (flag) is_found = true;
-                break;
-            }
-        }
-        if (is_found && (*it)->commodity_status == COMMODITY_NORMAL) {
+        // for (int i = 0; i < (*it)->commodity_name.size(); ++i) {
+        //     // if (key_word[0] == (*it)->commodity_name[i]) {
+        //     //     // for (int j = 0; j < key_word.size(); ++j)
+        //     //     //     if (i + j >= (*it)->commodity_name.size() || key_word[j] != (*it)->commodity_name[i + j]) {
+        //     //     //         flag = false;
+        //     //     //         break;
+        //     //     //     }
+        //     //     // if (flag) is_found = true;
+        //     //     break;
+        //     // }
+        // }
+        if ((*it)->commodity_name.find(key_word != string::npos) && (*it)->commodity_status == COMMODITY_NORMAL) {
             if (!column) {
                 cout << "ÉÌÆ·ID     Ãû³Æ                  ¼Û¸ñ    Âô¼ÒID  ÉÏ¼ÜÊ±¼ä" << endl;
                 column = true;
@@ -502,9 +502,7 @@ void search_on_sale (vector<commodity*>& commodity_list, string key_word) {
             cout << left << setw(5) << fixed << setprecision(1) <<(*it)->price << "    ";
             cout << left << setw(4) << (*it)->trader_id << "   ";
             cout << left << setw(10) << (*it)->launch_time << "  ";
-            cout << endl;
-        }
-        is_found = false, flag = true;
+            cout << endl;}
     }
         
     if (!column) cout << "Ã»ÓÐÕÒµ½ÄúÏëÒªµÄÉÌÆ·!¼´½«·µ»Ø³õÊ¼½çÃæ" << endl;

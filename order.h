@@ -12,13 +12,13 @@ class order {
 public:
     string order_id;
     string commodity_id;
-    float trade_price;
+    double trade_price;
     int sold_num;
     string trade_time;
     string trader_id;
     string buyer_id;
 
-    order (string order_id, string commodity_id, float trade_price,
+    order (string order_id, string commodity_id, double trade_price,
             int sold_num, string trade_time, string trader_id, string buyer_id);
 };
 

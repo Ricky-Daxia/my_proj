@@ -1,6 +1,6 @@
 #include "order.h"
 
-order:: order (string order_id, string commodity_id, float trade_price,
+order:: order (string order_id, string commodity_id, double trade_price,
             int sold_num, string trade_time, string trader_id, string buyer_id) {
                 this->order_id = order_id;
                 this->commodity_id = commodity_id;

@@ -10,7 +10,8 @@
         "xstring": "cpp",
         "stack": "cpp",
         "iomanip": "cpp",
-        "ios": "cpp"
+        "ios": "cpp",
+        "unordered_map": "cpp"
     },
     "files.encoding": "gbk",
     "C_Cpp.errorSquiggles": "Disabled"
