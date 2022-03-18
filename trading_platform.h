@@ -63,3 +63,4 @@ public:
 
     void manage_user_info (string cur_UID);
 };
+

@@ -243,7 +243,7 @@ vector<double> eval (string expr) {
             }
         }
     }
-    if (stk.top() - int(stk.top()) == 0) cout << stk.top() << endl;
+    //if (stk.top() - int(stk.top()) == 0) cout << stk.top() << endl;
     //else cout << fixed << setprecision(1) << stk.top() << endl;
     return {stk.top()};
 }
@@ -272,14 +272,16 @@ vector<double> API (string test) {
 //     cout << "===================================" << endl;
 //     //cout << "例如输入 1 + 2 3 * 4 程序会识别为 1 + 23 * 4 而不认为是错误" << endl;
 //     //cout << "您可以输入其它字符或者奇奇怪怪的东西来验证程序的稳健性,但最要不要这样做啦!" << endl;
-//     //cout << "源文件放在了 https://github.com/Ricky-Daxia/my_proj/tree/3_2_2/calculator 中" << endl;
 //     //cout << "===================================" << endl;
 //     cout << endl << endl << "请输入要计算的表达式:";
 //     cin.sync();
 //     getline (cin, test);
 
 //     if (expr_validity(filter(test)))
-//         cout << eval(infix_to_suffix(generate_expr(filter(test))))[0];
+//         {vector<double> res = eval(infix_to_suffix(generate_expr(filter(test))))[0];
+//         if (res[0] - int(res[0]) == 0) cout << res[0] << endl;
+//         else cout << fixed << setprecision(1) << res[0] << endl;
+//         }
 
 //     cout << endl << endl << "在计算器中验证下算得对不对?" << endl;
 //     //cout << "欢迎下次使用!" << endl;

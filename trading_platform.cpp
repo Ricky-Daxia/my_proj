@@ -383,6 +383,7 @@ vector<sub_user_info> trading_platform:: user_login () { //ÓÃ»§µÇÂ¼·µ»ØUIDºÍÓà¶î
                 return {sub_user_info ((*it)->UID, (*it)->balance)};
             }
             else cout << "-----ÃÜÂë´íÎó-----" << endl << endl;
+            Delay (1000);
             return {};
         }
     }
@@ -570,6 +571,7 @@ int trading_platform:: sub_user_menu () {
     return stoi(choice);
 }
 
+
 double purchase_commodity (vector<user*> user_list, string UID, vector<commodity*>& commodity_list, vector<order*>& order_list) {
     double cur_balance = 0, new_balance = 0;
     bool has_perchased = false, is_found = false;
@@ -653,6 +655,10 @@ double purchase_commodity (vector<user*> user_list, string UID, vector<commodity
         }
     else return cur_balance;
 }
+
+
+
+
 
 void trading_platform:: buyer_menu (string cur_UID, double cur_balance) { //
     int res = 0;
@@ -786,9 +792,6 @@ void trading_platform:: save_order () {
     }
     ofs.close();
 }
-
-
-
 
 
 

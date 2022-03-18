@@ -58,11 +58,11 @@ user:: user (string UID, string user_name, string user_password, string contact,
 }
 
 void parse_ban (vector<string> commands, vector<user*>& user_list) {
-    if (commands.size() < 2 || commands[0].size() < 3) return;
+    if (commands[0].size() < 3) return;
     cout << "生成的指令为: " << commands[0] << endl;
     //Delay (1000);
     //system("cls");
-    string command = commands[0], identity = commands[1], tmp;
+    string command = commands[0], tmp = "";
     vector<string> words;
     for (int i = 0; i < command.size(); ++i) {
         if (command[i] != ' ') tmp += command[i];
@@ -81,7 +81,7 @@ void parse_ban (vector<string> commands, vector<user*>& user_list) {
                 }
         
     }
-    cout << "无法解析的sql指令!" << endl;
+    else cout << "无法解析的sql指令!" << endl;
 }
 
 

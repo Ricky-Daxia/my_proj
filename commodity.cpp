@@ -492,7 +492,7 @@ void search_on_sale (vector<commodity*>& commodity_list, string key_word) {
         //     //     break;
         //     // }
         // }
-        if ((*it)->commodity_name.find(key_word != string::npos) && (*it)->commodity_status == COMMODITY_NORMAL) {
+        if ((*it)->commodity_name.find(key_word) != string::npos && (*it)->commodity_status == COMMODITY_NORMAL) {
             if (!column) {
                 cout << "商品ID     名称                  价格    卖家ID  上架时间" << endl;
                 column = true;
