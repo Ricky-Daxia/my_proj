@@ -1,5 +1,14 @@
 #include "user.h"
 
+
+void delay(int   time)//time*1000为秒数 
+{ 
+    clock_t   now   =   clock(); 
+
+    while(   clock()   -   now   <   time   ); 
+} 
+
+
 bool contain_all_nums (string& val) { //注册函数的辅助
     for (int i = 0; i < val.size(); ++i)
         if (val[i] < '0' || val[i] > '9') return false;
@@ -43,7 +52,7 @@ void save_sql_ban (string commmands) {
     ofs.close();
 }
 
-user:: user (string UID, string user_name, string user_password, string contact, string address, double balance, string status) {
+user:: user (string UID, string user_name, string user_password, string contact, string address, double balance, string status, string question = "", string ans = "") {
     this->UID = UID;
     this->user_name = user_name;
     this->user_password = user_password;
@@ -55,12 +64,14 @@ user:: user (string UID, string user_name, string user_password, string contact,
     if (!tmp.find('.')) this->expr = tmp;
     else tmp = tmp.substr(0, tmp.find('.') + 2);
     expr = tmp;
+    this->question = question;
+    this->answer = ans;
 }
 
 void parse_ban (vector<string> commands, vector<user*>& user_list) {
     if (commands[0].size() < 3) return;
     cout << "生成的指令为: " << commands[0] << endl;
-    //Delay (1000);
+    //delay (1000);
     //system("cls");
     string command = commands[0], tmp = "";
     vector<string> words;
@@ -161,22 +172,22 @@ void display_user_menu () {
 }
 
 void display_buyer_menu () {
-    cout << "=========================================================================================" << endl;
-    cout << "1.查看商品列表 2.购买商品 3.搜索商品 4.查看历史订单 5.查看商品详细信息 6.返回用户主界面" << endl;
-    cout << "=========================================================================================" << endl;
+    cout << "====================================================================================================" << endl;
+    cout << "1.查看商品列表 2.购买商品 3.搜索商品 4.查看历史订单 5.查看商品详细信息 6.评论区 7.返回用户主界面" << endl;
+    cout << "====================================================================================================" << endl;
     cout << endl;
 }
 
 void display_trader_menu () {
     cout << "=====================================================================================" << endl;
-    cout << "1.发布商品 2.查看发布商品 3.修改商品信息 4.下架商品 5.查看历史订单 6.返回用户主界面" << endl;
+    cout << "1.发布商品 2.查看发布商品 3.修改商品信息 4.下架商品 5.查看历史订单 6.评论区 7.返回用户主界面" << endl;
     cout << "=====================================================================================" << endl;
     cout << endl;
 }
 
 void user_info_menu () {
     cout << "===============================================" << endl;
-    cout << "1.查看信息 2.修改信息 3.充值 4.返回用户主界面" << endl;
+    cout << "1.查看信息 2.修改信息 3.充值 4.设置密保问题 5.返回用户主界面" << endl;
     cout << "===============================================" << endl;
     cout << endl;
 }
@@ -316,3 +327,98 @@ void deposit (vector<user*> user_list, string UID) {
             cout << "充值成功,当前余额: " << (*it)->balance << endl;
         } 
 }
+
+
+void set_question (vector<user*> user_list, string UID) {
+    for (auto& user: user_list) {
+        if (user->UID == UID) {
+            cout << endl << "请输入密保问题:";
+            string question;
+            cin.sync();
+            getline(cin, question);
+            cout << endl << "请输入答案:";
+            string ans;
+            cin.sync();
+            getline(cin, ans);
+            cout << "设置成功!" << endl;
+            user->question = question;
+            user->answer = ans;
+            return;
+        }
+    }
+}
+
+
+int forget_password (vector<user*>& user_list, string UID) {
+    for (auto& user: user_list) {
+        if (user->UID == UID && user->question != "") {
+            cout << "密保问题为" << user->question << endl;
+            cout << "请输入答案:";
+            string ans;
+            cin.sync();
+            getline(cin, ans);
+            if (ans == user->answer) {
+                cout << "验证成功!" << endl << "请输入新的密码:";
+                string new_password;
+                
+                char ch;
+                while ((ch = getch())){
+                    if (ch == '\r' || new_password.size() >= 20) break; //输够了就不能再输入了
+                    else if ((ch >= '0' && ch <= '9') || (ch >= 'a' && ch <= 'z')) {//合法性检查
+                        new_password.append(1, char(ch)); //注意函数参数
+                        cout.put('*');
+                    }
+                    else {
+                        cout << endl << "密码中含有不合法字符!" << endl;
+                        new_password.clear();
+                        cout << "请重新输入密码(不超过20个字符,由小写字母和数字组成):" ;
+                    }
+                }
+
+
+
+                cout << endl << "请再次确认您的密码:";
+                string verify;
+                
+                while ((ch = getch())){
+                    if (ch == '\r' || verify.size() >= 20) break; //输够了就不能再输入了
+                    else if ((ch >= '0' && ch <= '9') || (ch >= 'a' && ch <= 'z')) {//合法性检查
+                        verify.append(1, char(ch)); //注意函数参数
+                        cout.put('*');
+                    }
+                    else {
+                        cout << endl << "密码中含有不合法字符!" << endl;
+                        verify.clear();
+                        cout << "请重新输入密码(不超过20个字符,由小写字母和数字组成):" ;
+                    }
+                }
+
+
+
+
+                if (new_password == verify) {
+                    cout << "修改成功!" << endl << "即将返回主界面" << endl;
+                    delay(1000);
+                    user->user_password = new_password;
+                    return 1;
+                }
+                else {
+                    cout << "两次输入不一致!" << endl;
+                    delay(1000);
+                    return 0;
+                }
+            }
+            else {
+                cout << "答案错误!" << endl;
+                delay(1000);
+            }
+        }
+    }
+    cout << "该用户未设置密保问题!" << endl;
+    delay(1000);
+    return 0;
+}
+
+
+
+

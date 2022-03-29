@@ -6,6 +6,7 @@
 #include<iomanip>
 #include<ctime>
 #include<fstream>
+#include<algorithm>
 using namespace std;
 #define COMMODITY_NORMAL "销售中"
 #define COMMODITY_OUT "已下架"
@@ -28,6 +29,21 @@ public:
                 string trader_id, string launch_time, string commodity_status);
 };
 
+class comment {
+public:
+    string index;
+    string reply;
+    string time;
+    string UID;
+    string MID;
+    string content;
+    int num;
+    string status;
+    comment(string, string, string, string, string, string, int, string);
+};
+
+
+
 void display_commodity_list (vector<commodity*>& commodity_list);
 
 void search_commodity (vector<commodity*>& commodity_list,string key_word);
@@ -46,3 +62,4 @@ void search_on_sale (vector<commodity*>& commodity_list, string key_word);
 
 void display_details (vector<commodity*> commodity_list, string search_id);
 
+void comments (vector<commodity*>&, vector<comment*>&, string);

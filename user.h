@@ -1,11 +1,7 @@
 #pragma once
 #include "calculator.h"
-#include<string>
-#include<string.h>
-#include<iomanip>
-#include<vector>
-#include<iostream>
-#include<fstream>
+#include<conio.h>
+#include<bits/stdc++.h>
 using namespace std;
 
 
@@ -21,10 +17,11 @@ public:
     string status;
 
     string expr;
+    string question;
+    string answer;
 
-    user (string UID, string user_name, string user_password, string contact, string address, double balance, string status);
+    user (string UID, string user_name, string user_password, string contact, string address, double balance, string status, string question, string ans);
 
-    
 };
 
 void show_admin_menu ();
@@ -48,3 +45,7 @@ void modify_user_info (vector<user*> user_list, string UID, vector<string> name_
 void deposit (vector<user*> user_list, string UID);
 
 bool contain_all_nums (string& val);
+
+void set_question (vector<user*> user_list, string UID);
+
+int forget_password (vector<user*>& user_list, string UID);

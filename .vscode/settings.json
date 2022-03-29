@@ -11,7 +11,13 @@
         "stack": "cpp",
         "iomanip": "cpp",
         "ios": "cpp",
-        "unordered_map": "cpp"
+        "unordered_map": "cpp",
+        "compare": "cpp",
+        "exception": "cpp",
+        "fstream": "cpp",
+        "type_traits": "cpp",
+        "xmemory": "cpp",
+        "xutility": "cpp"
     },
     "files.encoding": "gbk",
     "C_Cpp.errorSquiggles": "Disabled"

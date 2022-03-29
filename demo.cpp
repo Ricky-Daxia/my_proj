@@ -12,7 +12,7 @@ int main() {
         cout << endl << "请输入选择:" << endl;
         cin.sync();
         getline (cin, choice);
-        while (choice.size() > 1 || (choice[0] != '1' && choice[0] != '2' && choice[0] != '3' && choice[0] != '4')) {
+        while (choice.size() > 1 || (choice[0] != '1' && choice[0] != '2' && choice[0] != '3' && choice[0] != '4' && choice[0] != '5')) {
             cout << endl << "无效输入!请重新输入选择:";
             choice.resize(0);
             cin.sync();
@@ -47,6 +47,13 @@ int main() {
             break;
         }
         case 4:
+            {
+                srand(int(time(0)));
+                tp.news (rand() % 7);
+                system("pause");
+                break;
+            }
+        case 5:
             cout << "欢迎下次使用!" << endl;
             exit(0); 
         default:

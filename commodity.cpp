@@ -14,6 +14,16 @@ commodity:: commodity (string commodity_id, string commodity_name, double price,
                             this->text = text;
                         }
 
+comment:: comment(string index, string reply, string time, string UID, string MID, string content, int num, string status) {
+    this->index = index;
+    this->content = content;
+    this->MID = MID;
+    this->num = num;
+    this->reply = reply;
+    this->status = status;
+    this->time = time;
+    this->UID = UID;
+}
 
 
 bool parse_launch_commodity (vector<string> commands, string commodity_name, double price, int num, string text) {
@@ -76,6 +86,33 @@ string sql_time_2 () {
     return d1 + " " + h + ":" + m + ":" + s + ": ";
 }
 
+string comment_time () {
+    time_t rawtime = time(0);
+    struct tm localtm = *localtime(&rawtime);
+    int year = localtm.tm_year + 1900;
+    int month = localtm.tm_mon + 1;
+    int day = localtm.tm_mday;
+    int hour = localtm.tm_hour;
+    int min = localtm.tm_min;
+    int sec = localtm.tm_sec;
+    string d1, d2, d3;
+    d1 = to_string(year) + "-";
+    if (month < 10) d1 += "0";
+    d2 = to_string(month) + "-";
+    if (day < 10) d2 += "0";
+    d3 = to_string(day);
+    d1 += d2 + d3;
+    string h, m, s;
+    if (hour < 10) h = "0" + to_string(hour);
+    else h = to_string(hour);
+    if (min < 10) m = "0" + to_string(min);
+    else m = to_string(min);
+    if (sec < 10) s = "0" + to_string(sec);
+    else s = to_string(sec);
+    return d1 + " " + h + ":" + m + ":" + s + ":";
+}
+
+
 void save_sql (string commmands) {
     ofstream ofs;
     ofs.open ("commands.txt", ios::app);
@@ -85,6 +122,35 @@ void save_sql (string commmands) {
     }
     ofs << sql_time_2() << commmands << endl;
     ofs.close();
+}
+
+void save_comments (vector<comment*>& comment_list) {
+    // ifstream ifs;
+    // int cur_num = 0;
+    // ifs.open ("comments.txt", ios::in);
+    //     if (!ifs.is_open()) {
+    //     cout << "出现了意想不到的错误!" << endl;
+    //     exit(-1);
+    // }
+    // string buffer;
+    // while (getline(ifs, buffer)) ++cur_num;
+    // ifs.close();
+
+    ofstream ofs;
+    ofs.open ("comments.txt", ios::trunc);
+    if (!ofs.is_open()) {
+        cout << "出现了意想不到的错误!" << endl;
+        exit(-1);
+    }
+    // string index;
+    // if (cur_num + 1 < 10) index = "00" + to_string(cur_num + 1);
+    // else if (cur_num + 1 < 100) index = "0" + to_string(cur_num + 1);
+    // else index = to_string(cur_num + 1);
+    
+    for (auto& c: comment_list) 
+        ofs << c->index << " " << c->reply << " " << c->time << " " << c->UID << " " << c->MID << " " << c->content << " " << c->num << " " << c->status << endl;
+    
+    ofs.close(); 
 }
 
 
@@ -144,21 +210,94 @@ void parse_modify_commodity_info (vector<string> commands, vector<commodity*>& c
 }
 
 
-
 void display_commodity_list (vector<commodity*>& commodity_list) { //展示商品列表
-    cout << "*******************************************************************************" << endl;
-    cout << "商品ID     名称                  价格    数量   卖家ID  上架时间   商品状态" << endl;
-    for (vector<commodity*>::iterator it = commodity_list.begin(); it != commodity_list.end(); ++it) {
-        cout << (*it)->commodity_id << "       ";
-        cout << left << setw(20) << (*it)->commodity_name << "  ";
-        cout << left << setw(5) << fixed << setprecision(1) <<(*it)->price << "    ";
-        cout << left << setw(5) <<(*it)->stock << "  ";
-        cout << left << setw(4) << (*it)->trader_id << "   ";
-        cout << left << setw(10) << (*it)->launch_time << "  ";
-        cout << left << setw(10) << (*it)->commodity_status << endl;
+    // cout << "*******************************************************************************" << endl;
+    // cout << "商品ID     名称                  价格    数量   卖家ID  上架时间   商品状态" << endl;
+    // for (vector<commodity*>::iterator it = commodity_list.begin(); it != commodity_list.end(); ++it) {
+    //     cout << (*it)->commodity_id << "       ";
+    //     cout << left << setw(20) << (*it)->commodity_name << "  ";
+    //     cout << left << setw(5) << fixed << setprecision(1) <<(*it)->price << "    ";
+    //     cout << left << setw(5) <<(*it)->stock << "  ";
+    //     cout << left << setw(4) << (*it)->trader_id << "   ";
+    //     cout << left << setw(10) << (*it)->launch_time << "  ";
+    //     cout << left << setw(10) << (*it)->commodity_status << endl;
+    // }
+    // cout << "*******************************************************************************" << endl;
+    // cout << endl;
+    cout << "请输入展示顺序: 1.按系统默认排序 2.按价格升序 3.按价格降序" << endl;
+    string choice;
+    cin.sync();
+    getline(cin, choice);
+    while (choice != "1" && choice != "2" && choice != "3") {
+        cout << "输入有误!请重新输入:";
+        cin.sync();
+        getline(cin, choice);
     }
-    cout << "*******************************************************************************" << endl;
-    cout << endl;
+    switch (stoi(choice))
+    {
+    case 1:
+        {
+            cout << "*******************************************************************************" << endl;
+            cout << "商品ID     名称                  价格    数量   卖家ID  上架时间   商品状态" << endl;
+            for (vector<commodity*>::iterator it = commodity_list.begin(); it != commodity_list.end(); ++it) {
+                cout << (*it)->commodity_id << "       ";
+                cout << left << setw(20) << (*it)->commodity_name << "  ";
+                cout << left << setw(5) << fixed << setprecision(1) <<(*it)->price << "    ";
+                cout << left << setw(5) <<(*it)->stock << "  ";
+                cout << left << setw(4) << (*it)->trader_id << "   ";
+                cout << left << setw(10) << (*it)->launch_time << "  ";
+                cout << left << setw(10) << (*it)->commodity_status << endl;
+            }
+            cout << "*******************************************************************************" << endl;
+            cout << endl;
+        break;}
+    case 2:
+        {
+            vector<commodity*> tmp;
+            for (auto& i: commodity_list) {commodity* t = i; tmp.push_back(t);}    
+            sort(tmp.begin(), tmp.end(), [](commodity* i, commodity* j)->bool {return i->price < j->price;});
+            cout << "**************************************************************************" << endl;
+            cout << "商品ID     名称                  价格    数量   上架时间   商品状态" << endl;
+            for (auto& it: tmp) 
+                {
+                cout << it->commodity_id << "       ";
+                cout << left << setw(20) << it->commodity_name << "  ";
+                cout << left << setw(5) << fixed << setprecision(1) << it->price << "    ";
+                cout << left << setw(5) <<it->stock << "  ";
+                cout << left << setw(4) << it->trader_id << "   ";
+                cout << left << setw(10) << it->launch_time << "  ";
+                cout << left << setw(10) << it->commodity_status << endl;
+                }
+            cout << "*******************************************************************************" << endl;
+            cout << endl;
+            tmp.clear();   
+            break;  
+        }
+    case 3:
+        {
+            vector<commodity*> tmp;
+            for (auto& i: commodity_list) {commodity* t = i; tmp.push_back(t);}    
+            sort(tmp.begin(), tmp.end(), [](commodity* i, commodity* j)->bool {return i->price > j->price;});
+            cout << "**************************************************************************" << endl;
+            cout << "商品ID     名称                  价格    数量   上架时间   商品状态" << endl;
+            for (auto& it: tmp) 
+                {
+                cout << it->commodity_id << "       ";
+                cout << left << setw(20) << it->commodity_name << "  ";
+                cout << left << setw(5) << fixed << setprecision(1) << it->price << "    ";
+                cout << left << setw(5) <<it->stock << "  ";
+                cout << left << setw(4) << it->trader_id << "   ";
+                cout << left << setw(10) << it->launch_time << "  ";
+                cout << left << setw(10) << it->commodity_status << endl;
+                }
+            cout << "*******************************************************************************" << endl;
+            cout << endl;
+            tmp.clear();  
+            break;
+        }
+    default:
+        break;
+    }
 }
 
 void search_commodity (vector<commodity*>& commodity_list,string key_word) { //搜索商品
@@ -336,21 +475,81 @@ int launch_commodity (vector<commodity*>& commodity_list, string UID) { //卖家发
 }
 
 void display_launched_commodity (vector<commodity*>& commodity_list, string UID) { //展示卖家商品列表
-    cout << "**************************************************************************" << endl;
-    cout << "商品ID     名称                  价格    数量   上架时间   商品状态" << endl;
-    for (vector<commodity*>::iterator it = commodity_list.begin(); it != commodity_list.end(); ++it) 
-        if ((*it)->trader_id == UID)
-            {
-                cout << (*it)->commodity_id << "       ";
-                cout << left << setw(20) << (*it)->commodity_name << "  ";
-                cout << left << setw(5) << fixed << setprecision(1) <<(*it)->price << "    ";
-                cout << left << setw(5) <<(*it)->stock << "  ";
-                cout << left << setw(10) << (*it)->launch_time << "  ";
-                cout << left << setw(10) << (*it)->commodity_status << endl;
-            }
-    cout << "**************************************************************************" << endl;
-    cout << endl;
-
+    cout << "请输入展示顺序: 1.按系统默认排序 2.按价格升序 3.按价格降序" << endl;
+    string choice;
+    cin.sync();
+    getline(cin, choice);
+    while (choice != "1" && choice != "2" && choice != "3") {
+        cout << "输入有误!请重新输入:";
+        cin.sync();
+        getline(cin, choice);
+    }
+    switch (stoi(choice))
+    {
+    case 1:
+        {
+            cout << "**************************************************************************" << endl;
+            cout << "商品ID     名称                  价格    数量   上架时间   商品状态" << endl;
+            for (vector<commodity*>::iterator it = commodity_list.begin(); it != commodity_list.end(); ++it) 
+                if ((*it)->trader_id == UID)
+                    {
+                        cout << (*it)->commodity_id << "       ";
+                        cout << left << setw(20) << (*it)->commodity_name << "  ";
+                        cout << left << setw(5) << fixed << setprecision(1) <<(*it)->price << "    ";
+                        cout << left << setw(5) <<(*it)->stock << "  ";
+                        cout << left << setw(10) << (*it)->launch_time << "  ";
+                        cout << left << setw(10) << (*it)->commodity_status << endl;
+                    }
+            cout << "**************************************************************************" << endl;
+            cout << endl;
+        break;}
+    case 2:
+        {
+            vector<commodity*> tmp;
+            for (auto& i: commodity_list) {commodity* t = i; tmp.push_back(t);}    
+            sort(tmp.begin(), tmp.end(), [](commodity* i, commodity* j)->bool {return i->price < j->price;});
+            cout << "**************************************************************************" << endl;
+            cout << "商品ID     名称                  价格    数量   上架时间   商品状态" << endl;
+            for (auto& it: tmp) 
+                if (it->trader_id == UID)
+                    {
+                        cout << it->commodity_id << "       ";
+                        cout << left << setw(20) << it->commodity_name << "  ";
+                        cout << left << setw(5) << fixed << setprecision(1) <<it->price << "    ";
+                        cout << left << setw(5) <<it->stock << "  ";
+                        cout << left << setw(10) << it->launch_time << "  ";
+                        cout << left << setw(10) << it->commodity_status << endl;
+                    }
+            cout << "**************************************************************************" << endl;
+            cout << endl;
+            tmp.clear();     
+            break;
+        }
+    case 3:
+        {
+            vector<commodity*> tmp;
+            for (auto& i: commodity_list) {commodity* t = i; tmp.push_back(t);}    
+            sort(tmp.begin(), tmp.end(), [](commodity* i, commodity* j)->bool {return i->price > j->price;});
+            cout << "**************************************************************************" << endl;
+            cout << "商品ID     名称                  价格    数量   上架时间   商品状态" << endl;
+            for (auto& it: tmp) 
+                if (it->trader_id == UID)
+                    {
+                        cout << it->commodity_id << "       ";
+                        cout << left << setw(20) << it->commodity_name << "  ";
+                        cout << left << setw(5) << fixed << setprecision(1) <<it->price << "    ";
+                        cout << left << setw(5) <<it->stock << "  ";
+                        cout << left << setw(10) << it->launch_time << "  ";
+                        cout << left << setw(10) << it->commodity_status << endl;
+                    }
+            cout << "**************************************************************************" << endl;
+            cout << endl;
+            tmp.clear(); 
+            break; 
+        }
+    default:
+        break;
+    }
 }
 
 int modify_commodity (vector<commodity*>& commodity_list, string UID) { //卖家修改商品
@@ -461,19 +660,89 @@ int modify_commodity (vector<commodity*>& commodity_list, string UID) { //卖家修
 }
 
 void best_selling (vector<commodity*>& commodity_list) {
-    cout << "*******************************************************************************" << endl;
-    cout << "商品ID     名称                  价格    卖家ID  上架时间" << endl;
-    for (vector<commodity*>::iterator it = commodity_list.begin(); it != commodity_list.end(); ++it) {
-        if ((*it)->commodity_status == COMMODITY_NORMAL)
-            {cout << (*it)->commodity_id << "       ";
-            cout << left << setw(20) << (*it)->commodity_name << "  ";
-            cout << left << setw(5) << fixed << setprecision(1) <<(*it)->price << "    ";
-            cout << left << setw(4) << (*it)->trader_id << "   ";
-            cout << left << setw(10) << (*it)->launch_time << "  ";
-            cout << endl;}
+    // cout << "*******************************************************************************" << endl;
+    // cout << "商品ID     名称                  价格    卖家ID  上架时间" << endl;
+    // for (vector<commodity*>::iterator it = commodity_list.begin(); it != commodity_list.end(); ++it) {
+    //     if ((*it)->commodity_status == COMMODITY_NORMAL)
+    //         {cout << (*it)->commodity_id << "       ";
+    //         cout << left << setw(20) << (*it)->commodity_name << "  ";
+    //         cout << left << setw(5) << fixed << setprecision(1) <<(*it)->price << "    ";
+    //         cout << left << setw(4) << (*it)->trader_id << "   ";
+    //         cout << left << setw(10) << (*it)->launch_time << "  ";
+    //         cout << endl;}
+    // }
+    // cout << "*******************************************************************************" << endl;
+    // cout << endl;  
+    cout << "请输入展示顺序: 1.按系统默认排序 2.按价格升序 3.按价格降序" << endl;
+    string choice;
+    cin.sync();
+    getline(cin, choice);
+    while (choice != "1" && choice != "2" && choice != "3") {
+        cout << "输入有误!请重新输入:";
+        cin.sync();
+        getline(cin, choice);
     }
-    cout << "*******************************************************************************" << endl;
-    cout << endl;  
+    switch (stoi(choice))
+    {
+    case 1:
+        {
+            cout << "*******************************************************************************" << endl;
+            cout << "商品ID     名称                  价格    卖家ID  上架时间" << endl;
+            for (auto& it: commodity_list) {
+                if (it->commodity_status == COMMODITY_NORMAL)
+                    {cout << it->commodity_id << "       ";
+                    cout << left << setw(20) << it->commodity_name << "  ";
+                    cout << left << setw(5) << fixed << setprecision(1) <<it->price << "    ";
+                    cout << left << setw(4) << it->trader_id << "   ";
+                    cout << left << setw(10) << it->launch_time << "  ";
+                    cout << endl;}
+            }
+            cout << "*******************************************************************************" << endl;
+            cout << endl;  
+        break;}
+    case 2:
+        {
+            vector<commodity*> tmp;
+            for (auto& i: commodity_list) {commodity* t = i; tmp.push_back(t);}    
+            sort(tmp.begin(), tmp.end(), [](commodity* i, commodity* j)->bool {return i->price < j->price;});
+            cout << "**************************************************************************" << endl;
+            cout << "商品ID     名称                  价格    数量   上架时间   商品状态" << endl;
+            for (auto& it: tmp) 
+                if (it->commodity_status == COMMODITY_NORMAL)
+                    {cout << it->commodity_id << "       ";
+                    cout << left << setw(20) << it->commodity_name << "  ";
+                    cout << left << setw(5) << fixed << setprecision(1) <<it->price << "    ";
+                    cout << left << setw(4) << it->trader_id << "   ";
+                    cout << left << setw(10) << it->launch_time << "  ";
+                    cout << endl;}
+            cout << "**************************************************************************" << endl;
+            cout << endl;
+            tmp.clear();     
+            break;
+        }
+    case 3:
+        {
+            vector<commodity*> tmp;
+            for (auto& i: commodity_list) {commodity* t = i; tmp.push_back(t);}    
+            sort(tmp.begin(), tmp.end(), [](commodity* i, commodity* j)->bool {return i->price > j->price;});
+            cout << "**************************************************************************" << endl;
+            cout << "商品ID     名称                  价格    数量   上架时间   商品状态" << endl;
+            for (auto& it: tmp) 
+                if (it->commodity_status == COMMODITY_NORMAL)
+                    {cout << it->commodity_id << "       ";
+                    cout << left << setw(20) << it->commodity_name << "  ";
+                    cout << left << setw(5) << fixed << setprecision(1) <<it->price << "    ";
+                    cout << left << setw(4) << it->trader_id << "   ";
+                    cout << left << setw(10) << it->launch_time << "  ";
+                    cout << endl;}
+            cout << "**************************************************************************" << endl;
+            cout << endl;
+            tmp.clear();  
+            break;
+        }
+    default:
+        break;
+    }
 }
 
 void search_on_sale (vector<commodity*>& commodity_list, string key_word) { 
@@ -511,7 +780,6 @@ void search_on_sale (vector<commodity*>& commodity_list, string key_word) {
 }
 
 void display_details (vector<commodity*> commodity_list, string search_id) {
-
     cout << "*******************************************" << endl;
     bool is_found = false;
     for (vector<commodity*>::iterator it = commodity_list.begin(); it != commodity_list.end(); ++it) 
@@ -527,5 +795,156 @@ void display_details (vector<commodity*> commodity_list, string search_id) {
         }
     if (!is_found) cout << "没有找到该商品!" << endl;
     cout << "*******************************************" << endl;   
+}
+
+
+void comments (vector<commodity*>& commodity_list, vector<comment*>& comment_list, string UID) {
+    cout << "请输入您的选择(1.管理我的评论 2.进入商品评论区): ";
+    string my_choice;
+    cin.sync();
+    getline(cin, my_choice);
+    while (my_choice.size() <= 0 || (my_choice != "1" && my_choice != "2")) {
+        cout << "输入有误! 请重新输入: ";
+        cin.sync();
+        getline(cin, my_choice);
+    }
+    if (my_choice == "1") {
+        cout << "=================================================================" << endl;
+        for (auto& t: comment_list) {
+            if (t->UID == UID && t->status == "normal") {
+                cout << t->index << "  " << t->time << " " << t->UID << " " << left << setw(20) << t->content << " ";
+                cout << "点赞数:" << t->num << endl;
+            }
+        }
+        cout << "=================================================================" << endl;
+        cout << "请输入您的选择(1.删除评论 2.返回上一级界面): ";
+        string new_choice;
+        cin.sync();
+        getline(cin, new_choice);
+        while (new_choice.size() <= 0 || (new_choice != "1" && new_choice != "2")) {
+            cout << "输入有误! 请重新输入: ";
+            cin.sync();
+            getline(cin, new_choice);
+        }
+        if (new_choice == "1") {
+            cout << "请输入您要删除的评论的序号: ";
+            string del_id;
+            cin.sync();
+            getline(cin, del_id);
+            for (auto& c: comment_list) {
+                if (c->index == del_id) {
+                    c->status = "deleted";
+                    save_comments(comment_list);
+                    cout << "删除成功!" << endl;
+                    system("pause");
+                    return;
+                }
+            } 
+            cout << "删除失败!" << endl;
+        }
+        else return;
+    }
+
+    else {    
+    cout << "请输入商品ID: ";
+    string MID;
+    cin.sync();
+    getline(cin, MID);
+    display_details (commodity_list, MID);
+    //先展示商品信息
+    cout << endl << "评论区:" << endl;
+    cout << "============================================================================================================================" << endl;
+    for (auto& t: comment_list) {
+        if (t->MID == MID && t->status == "normal" && t->reply == "000") {
+            cout << t->index << "  " << t->time << " " << t->UID << " " << left << setw(20) << t->content << " ";
+            cout << "点赞数:" << t->num << endl;
+            for (auto& c: comment_list) {
+                if (c->reply == t->index && c->status == "normal") {
+                    cout << "回复 " << c->time << " " << c->UID << " " << left << setw(20) << t->content << endl;
+                }
+            }
+        }
+    }
+    cout << "============================================================================================================================" << endl;
+
+    cout << "请选择您的操作(1.发表评论 2.回复评论 3.点赞评论 4.返回上一级): ";
+    string choice;
+    cin.sync();
+    getline(cin, choice);
+    while (choice.size() <= 0 || (choice != "1" && choice != "2" && choice != "3" && choice != "4")) {
+        cout << "输入有误!" << endl;
+        cin.sync();
+        cout << "请重新输入: ";
+        getline(cin, choice);
+    }
+    cout << endl;
+    switch (stoi(choice)) {
+        case 1:
+            {
+                cout << "留下一条友善的评论叭(不超过20个字符): ";
+                string my_comment;
+                cin.sync();
+                getline(cin, my_comment);
+                if (my_comment.size() > 20) cout << "评论字数超出限制!" << endl;
+                else {
+                        int cur_num = comment_list.size();
+                        string index;
+                        if (cur_num + 1 < 10) index = "00" + to_string(cur_num + 1);
+                        else if (cur_num + 1 < 100) index = "0" + to_string(cur_num + 1);
+                        else index = to_string(cur_num + 1);
+                        comment_list.push_back(new comment(index, "000", comment_time(), UID, MID, my_comment, 0, "normal"));
+                        save_comments(comment_list);
+                        cout << "评论成功!" << endl;
+                        system("pause");
+                }
+                break;
+            }
+        case 2:
+            {
+                cout << "请输入您要回复的评论的序号: ";
+                string Id;
+                cin.sync();
+                getline(cin, Id);
+                for (auto& c: comment_list) {
+                    if (c->index == Id && c->status == "normal") {
+                        cout << "请留下您的回复(不超过20个字符): ";
+                        string my_comment;
+                        cin.sync();
+                        getline(cin, my_comment);
+                        if (my_comment.size() > 20) cout << "评论字数超出限制!" << endl;
+                        else {
+                                int cur_num = comment_list.size();
+                                string index;
+                                if (cur_num + 1 < 10) index = "00" + to_string(cur_num + 1);
+                                else if (cur_num + 1 < 100) index = "0" + to_string(cur_num + 1);
+                                else index = to_string(cur_num + 1);
+                                comment_list.push_back(new comment(index, Id, comment_time(), UID, MID, my_comment, 0, "normal"));
+                                save_comments(comment_list);
+                                cout << "回复成功!" << endl;
+                                system("pause");
+                        }
+                    }
+                }
+                break;
+            }
+        case 3:
+            {
+                cout << "请输入您要点赞的评论的序号: ";
+                string Id;
+                cin.sync();
+                getline(cin, Id);
+                for (auto& c: comment_list) {
+                    if (c->index == Id && c->status == "normal") {
+                        c->num += 1;
+                    }
+                    save_comments(comment_list);
+                    cout << "点赞成功!" << endl;
+                    system("pause");
+                }
+                break;
+            }
+        case 4: break;
+        default: break;
+    }}
 }
 

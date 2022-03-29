@@ -1,12 +1,12 @@
 #include "trading_platform.h"
 #include<fstream>
-#include<ctime>
 #include<conio.h>
 #include<iomanip>
 vector<user*> user_list = {};
 vector<string> name_list = {};
 vector<commodity*> commodity_list = {};
 vector<order*> order_list = {};
+vector<comment*> comment_list = {};
 int user_num = 0;
 int commodity_num = 0;
 int order_num = 0;
@@ -105,24 +105,6 @@ void parse_update (vector<string> commands) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 trading_platform:: trading_platform () { //∞—”√ªß…Ã∆∑≥ı ºªØ±‰≥…¿‡µƒÀΩ”–∫Ø ˝»ª∫Ûµ˜”√
     user_num = -1, commodity_num = -1, order_num = -1;
     user_list = {}, name_list = {}, commodity_list = {}, order_list = {};
@@ -134,7 +116,7 @@ trading_platform:: trading_platform () { //∞—”√ªß…Ã∆∑≥ı ºªØ±‰≥…¿‡µƒÀΩ”–∫Ø ˝»ª∫Ûµ
     ifs.open(USER, ios::in);
     if (!ifs.is_open()){
         ofs.open (USER, ios::out);
-        ofs << "”√ªßID,”√ªß√˚,√‹¬Î,¡™œµ∑Ω Ω,µÿ÷∑,«Æ∞¸”‡∂Ó,”√ªß◊¥Ã¨" << endl;
+        ofs << "”√ªßID,”√ªß√˚,√‹¬Î,¡™œµ∑Ω Ω,µÿ÷∑,«Æ∞¸”‡∂Ó,”√ªß◊¥Ã¨,√‹±£Œ Ã‚,√‹¬Î" << endl;
         ofs.close();
         user_num = 0;
     }
@@ -150,7 +132,7 @@ trading_platform:: trading_platform () { //∞—”√ªß…Ã∆∑≥ı ºªØ±‰≥…¿‡µƒÀΩ”–∫Ø ˝»ª∫Ûµ
                     else temp.append(1, buffer[i]);
                 }
                 //¥Ê»Î
-                user_list.push_back(new user(attributes[0], attributes[1], attributes[2], attributes[3], attributes[4], stod(attributes[5]), temp));
+                user_list.push_back(new user(attributes[0], attributes[1], attributes[2], attributes[3], attributes[4], stod(attributes[5]), attributes[6], attributes[7], temp));
                 name_list.push_back(attributes[1]);
                 temp = "", attributes = {}, buffer = ""; //«Âø’
             }
@@ -210,6 +192,33 @@ trading_platform:: trading_platform () { //∞—”√ªß…Ã∆∑≥ı ºªØ±‰≥…¿‡µƒÀΩ”–∫Ø ˝»ª∫Ûµ
     }
     ifs.close();
 
+
+
+    ifs.open("comments.txt", ios::in);
+    if (!ifs.is_open()){
+        ofs.open ("comments.txt", ios::out);
+        ofs.close();
+    }
+    else {
+        vector<string> tmp;
+        string t;
+        while (getline(ifs, buffer)) {
+            for (int i = 0; i < buffer.size(); ++i) {
+                if (buffer[i] == ' ') {
+                    tmp.push_back(t);
+                    t.resize(0);
+                }
+                else t.append(1, buffer[i]);
+            }
+            tmp.push_back(t);
+            t.resize(0);
+            comment_list.push_back(new comment(tmp[0], tmp[1], tmp[2] + " " + tmp[3], tmp[4], tmp[5], tmp[6], stoi(tmp[7]), tmp[8]));
+            tmp.clear();
+        }
+        sort(comment_list.begin(), comment_list.end(), [](comment*& t1, comment*& t2)->bool {return t1->num > t2->num;}); //≈≈–Ú
+    }
+    ifs.close();
+
 }
 
 trading_platform:: ~trading_platform () {
@@ -220,10 +229,10 @@ trading_platform:: ~trading_platform () {
 }
 
 void trading_platform:: show_menu () {
-    cout << "============================================" << endl;
+    cout << "=========================================================" << endl;
     cout << "∂¨∞¬ºÕƒÓ∆∑Ωª“◊∆ΩÃ® Œ™÷–π˙∞¬‘ÀΩ°∂˘º””Õ" << endl;
-    cout << "1.π‹¿Ì‘±µ«¬º 2.”√ªß◊¢≤· 3.”√ªßµ«¬º 4.ÕÀ≥ˆ≥Ã–Ú" << endl;
-    cout << "============================================" << endl;
+    cout << "1.π‹¿Ì‘±µ«¬º 2.”√ªß◊¢≤· 3.”√ªßµ«¬º 4.ΩÒ»’–¬Œ≈ 5.ÕÀ≥ˆ≥Ã–Ú" << endl;
+    cout << "=========================================================" << endl;
     cout << endl;
 }
 
@@ -262,12 +271,12 @@ void trading_platform:: save_user () { //±£¥Ê”√ªßµΩŒƒº˛÷–
         exit(-1);
     }
     else {
-        ofs << "”√ªßID,”√ªß√˚,√‹¬Î,¡™œµ∑Ω Ω,µÿ÷∑,«Æ∞¸”‡∂Ó,”√ªß◊¥Ã¨" << endl;
+        ofs << "”√ªßID,”√ªß√˚,√‹¬Î,¡™œµ∑Ω Ω,µÿ÷∑,«Æ∞¸”‡∂Ó,”√ªß◊¥Ã¨,√‹±£Œ Ã‚,√‹¬Î" << endl;
         for (vector<user*>::iterator it = user_list.begin(); it != user_list.end(); ++it)
             ofs << (*it)->UID << ',' << (*it)->user_name << ','
                 << (*it)->user_password << ',' << (*it)->contact << ','
                 << (*it)->address << ',' << fixed << setprecision(1) <<(*it)->balance << ','
-                << (*it)->status << endl;
+                << (*it)->status << ',' << (*it)->question << ',' << (*it)->answer << endl;
     }
     ofs.close();
 }
@@ -344,7 +353,7 @@ void trading_platform:: sign_up () { //ª˘±æÕÍ≥…ºÏ≤È(≤ªƒ‹≤È÷–Œƒ)
 
     //¥Ê»Î”√ªß¡–±Ì÷–
     if (user_list.empty())
-        user_list.push_back(new user("U001", user_name, user_password, contact, address, balance, NORMAL));
+        user_list.push_back(new user("U001", user_name, user_password, contact, address, balance, NORMAL, "", ""));
     else {
         int i = user_list.size();
         string UID;
@@ -353,7 +362,7 @@ void trading_platform:: sign_up () { //ª˘±æÕÍ≥…ºÏ≤È(≤ªƒ‹≤È÷–Œƒ)
         else UID = "U";
         
         UID.append(to_string(i + 1));
-        user_list.push_back(new user(UID, user_name, user_password, contact, address, balance, NORMAL));
+        user_list.push_back(new user(UID, user_name, user_password, contact, address, balance, NORMAL, "", ""));
     }
     this->save_user();
     ++user_num;
@@ -382,7 +391,30 @@ vector<sub_user_info> trading_platform:: user_login () { //”√ªßµ«¬º∑µªÿUID∫Õ”‡∂Ó
                 cout << endl;
                 return {sub_user_info ((*it)->UID, (*it)->balance)};
             }
-            else cout << "-----√‹¬Î¥ÌŒÛ-----" << endl << endl;
+            else {cout << "-----√‹¬Î¥ÌŒÛ-----" << endl;
+                cout <<  "«Î ‰»Î—°œÓ: 1.Õ¸º«√‹¬Î 0.∑µªÿ÷˜ΩÁ√Ê:";
+                cin.sync();
+                string choice;
+                getline(cin, choice);
+                while (choice.size() <= 0 || choice.size() > 1) {
+                    cout << endl << " ‰»Î”–ŒÛ!«Î÷ÿ–¬ ‰»Î:";
+                    cin.sync();
+                    choice.clear();
+                    getline(cin, choice);
+                }
+                if (choice[0] == '1') {
+                    int res = forget_password(user_list, (*it)->UID);
+                    if (res == 1) {
+                        cout << "«Î÷ÿ–¬µ«¬º!" << endl;
+                        Delay (1000);
+                        return {};
+                    }
+                    else return {};
+                }
+                else if (choice[0] == '0') return {};
+                else {cout << endl << " ‰»Î”–ŒÛ!" << endl;  Delay (1000); return {};}
+            }
+
             Delay (1000);
             return {};
         }
@@ -511,7 +543,7 @@ void trading_platform:: trader_menu (string cur_UID) { //¬Ùº“ΩÁ√Ê
         cout << "«Î ‰»Î≤Ÿ◊˜:";
         cin.sync();
         getline (cin, choice);
-        while (choice.size() > 1 || (choice[0] != '1' && choice[0] != '2' && choice[0] != '3' && choice[0] != '4' && choice[0] != '5' && choice[0] != '6')) {
+        while (choice.size() > 1 || (choice[0] != '1' && choice[0] != '2' && choice[0] != '3' && choice[0] != '4' && choice[0] != '5' && choice[0] != '6' && choice[0] != '7')) {
             cout << " ‰»Î”–ŒÛ!«Î÷ÿ–¬ ‰»Î:";
             choice.resize(0);
             cin.sync();
@@ -547,6 +579,11 @@ void trading_platform:: trader_menu (string cur_UID) { //¬Ùº“ΩÁ√Ê
                 system("pause");
                 break;}
             case 6:
+                {
+                    comments (commodity_list, comment_list, cur_UID);
+                    break;
+                }
+            case 7:
                 return;
             default:
                 cout << "Œﬁ–ß≤Ÿ◊˜!" << endl;
@@ -657,9 +694,6 @@ double purchase_commodity (vector<user*> user_list, string UID, vector<commodity
 }
 
 
-
-
-
 void trading_platform:: buyer_menu (string cur_UID, double cur_balance) { //
     int res = 0;
     string choice = "";
@@ -670,7 +704,7 @@ void trading_platform:: buyer_menu (string cur_UID, double cur_balance) { //
         display_buyer_menu ();
         cout << "«Î ‰»Î≤Ÿ◊˜:";
         getline (cin, choice);
-        while (!cin || choice.size() <=  0 || choice.size() > 1 || (choice[0] != '1' && choice[0] != '2' && choice[0] != '3' && choice[0] != '4' && choice[0] != '5' && choice[0] != '6')) {
+        while (!cin || choice.size() <=  0 || choice.size() > 1 || (choice[0] != '1' && choice[0] != '2' && choice[0] != '3' && choice[0] != '4' && choice[0] != '5' && choice[0] != '6' && choice[0] != '7')) {
             cout << "∑¢…˙“‚œÎ≤ªµΩµƒ¥ÌŒÛ!«Î÷ÿ–¬ ‰»Î:";
             cin.clear();
             cin.sync();
@@ -723,6 +757,11 @@ void trading_platform:: buyer_menu (string cur_UID, double cur_balance) { //
                 system("pause");
                 break;}
             case 6:
+                {
+                    comments (commodity_list, comment_list, cur_UID);
+                    break;
+                }
+            case 7:
                 return;
             default:
                 cout << "Œﬁ–ß≤Ÿ◊˜!" << endl;
@@ -746,7 +785,7 @@ void trading_platform:: manage_user_info (string cur_UID) {
                 cin.sync();
                 getline (cin, choice);
             }
-            if (choice.size() <= 0 || choice.size() > 1 || (choice[0] != '1' && choice[0] != '2' && choice[0] != '3' && choice[0] != '4'))
+            if (choice.size() <= 0 || choice.size() > 1 || (choice[0] != '1' && choice[0] != '2' && choice[0] != '3' && choice[0] != '4' && choice[0] != '5'))
                 cout << "Œﬁ–ß≤Ÿ◊˜!«Î÷ÿ–¬ ‰»Î: " << endl;
             else break;
         }
@@ -768,6 +807,10 @@ void trading_platform:: manage_user_info (string cur_UID) {
                 system("pause");
                 break;
             case 4:
+                set_question (user_list, cur_UID);
+                this->save_user();
+                break;
+            case 5:
                 return;
             default: break;
         }
@@ -794,8 +837,55 @@ void trading_platform:: save_order () {
 }
 
 
-
-
+void trading_platform:: news (int i) {
+    switch (i)
+    {
+        case 0:
+        {
+            cout << "2‘¬16»’ÕÌ,◊‘”… Ωª¨—©ƒ–◊”ø’÷–ºº«…æˆ»¸,31ÀÍµƒ∆Îπ„Ë±“‘ƒ—∂»œµ ˝5.0°¢129∑÷ªÒµ√Ω≈∆!" << endl;
+            cout <<"Àƒ’Ω∂¨∞¬,ÀƒΩÏ ¿Ωı»¸¡ΩΩ¡Ω“¯,À˚‘¯Àµ,°∞◊Ó¥Ûµƒ∂‘ ÷ «◊‘º∫°±°£÷¬æ¥º·≥÷”Î»»∞Æ!‘Ÿ¥Œπßœ≤!" << endl;
+            break;
+        }
+        case 1:
+        {
+            cout << "2‘¬5»’,÷–π˙∂”‘⁄±±æ©∂¨∞¬ª·∂Ãµ¿ÀŸª¨ªÏ∫œÕ≈ÃÂΩ”¡¶±»»¸÷–∂·π⁄,’‚ «÷–π˙¥˙±ÌÕ≈‘⁄¥À¥Œ∂¨∞¬ª·÷–ªÒµ√µƒµ⁄1√∂Ω≈∆°£" << endl;
+            cout << "ªÿø¥’‚≥°±»»¸£∫ ««ø¥Û µ¡¶∫Õƒ¨∆ı≈‰∫œ,À‹‘Ï¡ÀÀŸ∂»”Îº§«È£ª «ÕÁ«ø∆¥≤´∫Õ¥”»›≤ª∆», È–¥¡Àπ‚»Ÿ”Î√ŒœÎ°£’˚≥°±»»¸≥‰¬˙–¸ƒÓ," << endl;
+            cout << "’‚√∂Ω≈∆ƒ√µ√≤ª“◊!’˝“Ú≤ª“◊,“≤»√∆¥≤´∏¸”–“‚“Â!÷–π˙Ω°∂˘º””Õ!" << endl;
+            break;
+        }
+        case 2:
+        {
+            cout << "2‘¬7»’ÕÌ,‘⁄±±æ©∂¨∞¬ª·∂Ãµ¿ÀŸª¨ƒ–◊”1000√◊æˆ»¸÷–,÷–π˙—° ÷»Œ◊”Õ˛ªÒµ√Ω≈∆,’‚ «÷–π˙¥˙±ÌÕ≈‘⁄¥À¥Œ∂¨∞¬ª·÷–ªÒµ√µƒµ⁄2√∂Ω≈∆°£" << endl;
+            cout << "÷–π˙∂Ãµ¿, «ƒ„”¿‘∂ø…“‘œ‡–≈µƒ°∞π˙÷Æº‚µ∂°±!" << endl;
+            break;
+        }
+        case 3:
+        {
+            cout << "2‘¬14»’,‘⁄±±æ©∂¨∞¬ª·◊‘”… Ωª¨—©≈Æ◊”ø’÷–ºº«…æˆ»¸÷–,÷–π˙—° ÷–Ï√ŒÃ“∂·π⁄°£’‚ «÷–π˙¥˙±ÌÕ≈‘⁄¥À¥Œ∂¨∞¬ª·÷–ªÒµ√µƒµ⁄5√∂Ω≈∆°£" << endl;
+            cout << "4¥Œ≤Œº”∂¨∞¬ ◊¥Œ∂·µ√Ω≈∆!’‚æÕ «»»∞Æ”Îº·∂®µƒ¡¶¡ø!" << endl;
+            break;
+        }
+        case 4:
+        {
+            cout << "2‘¬12»’,‘⁄±±æ©∂¨∞¬ª·ÀŸ∂»ª¨±˘ƒ–◊”500√◊æˆ»¸÷–,∏ﬂÕ§”Ó∆∆ºÕ¬º∂·π⁄,”Æµ√÷–π˙µ⁄ÀƒΩ°£" << endl;
+            cout << "¥À«∞,π˙º“ÀŸª¨π›°∞±˘Àø¥¯°±“—º˚÷§∂‡œÓ ¿ΩÁºÕ¬º°¢∞¬‘Àª·ºÕ¬ºµƒµÆ…˙!" << endl;
+            break;
+        }
+        case 5:
+        {
+            cout << "2‘¬8»’,‘⁄±±æ©∂¨∞¬ª·◊‘”… Ωª¨—©≈Æ◊”¥ÛÃ¯Ã®æˆ»¸,¥ÀœÓƒø «∂¨∞¬¿˙ ∑…œµ⁄“ª¥Œ…Ë÷√,«‡Õ‹π´÷˜π»∞Æ¡Ë∂·µ√Ω≈∆!" << endl;
+            cout <<"’‚ «À˝◊‘º∫ªÒµ√µƒ ◊∏ˆ∂¨∞¬ª·Ω±≈∆!’‚“≤ «÷–π˙‘À∂Ø‘±µ⁄“ª¥Œ≤Œº”∂¨∞¬ª·¥ÛÃ¯Ã®µƒ±»»¸!" << endl;
+            break;
+        }
+        case 6:
+        {
+            cout << "2‘¬15»’,±±æ©2022ƒÍ∂¨∞¬ª·µ•∞Âª¨—©ƒ–◊”¥ÛÃ¯Ã®æˆ»¸÷–,÷–π˙—° ÷À’Ò¥√˘ªÒµ√Ω≈∆,∞Ô÷˙÷–π˙µ•∞Âª¨—© µœ÷∂¨∞¬Ω≈∆¡„µƒÕª∆∆!" << endl;
+            cout << "’‚“≤ «÷–π˙æ¸Õ≈‘⁄±æΩÏ∂¨∞¬ª·ªÒµ√µƒµ⁄¡˘øÈΩ≈∆,À¢–¬¡À÷–π˙∂¨∞¬¥˙±ÌÕ≈¿˙ΩÏ◊Ó∫√≥…º®!" << endl;
+            break;
+        }
+        default: break;
+    }
+}
 
 
 

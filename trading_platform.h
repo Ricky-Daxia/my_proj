@@ -1,6 +1,8 @@
 #pragma once
 #include<iostream>
 #include<vector>
+#include<time.h>
+#include<stdlib.h>
 #include "user.h"
 #include "commodity.h"
 #include "order.h"
@@ -18,6 +20,7 @@ extern vector<user*> user_list;
 extern vector<string> name_list;
 extern vector<commodity*> commodity_list;
 extern vector<order*> order_list;
+extern vector<comment*> comment_list;
 extern int user_num;
 extern int commodity_num;
 extern int order_num;
@@ -62,5 +65,7 @@ public:
     void save_order ();
 
     void manage_user_info (string cur_UID);
+
+    void news (int i);
 };
 
