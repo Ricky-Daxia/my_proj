@@ -179,16 +179,16 @@ void display_buyer_menu () {
 }
 
 void display_trader_menu () {
-    cout << "=====================================================================================" << endl;
+    cout << "===============================================================================================" << endl;
     cout << "1.发布商品 2.查看发布商品 3.修改商品信息 4.下架商品 5.查看历史订单 6.评论区 7.返回用户主界面" << endl;
-    cout << "=====================================================================================" << endl;
+    cout << "===============================================================================================" << endl;
     cout << endl;
 }
 
 void user_info_menu () {
-    cout << "===============================================" << endl;
+    cout << "==============================================================" << endl;
     cout << "1.查看信息 2.修改信息 3.充值 4.设置密保问题 5.返回用户主界面" << endl;
-    cout << "===============================================" << endl;
+    cout << "==============================================================" << endl;
     cout << endl;
 }
 
@@ -343,6 +343,7 @@ void set_question (vector<user*> user_list, string UID) {
             cout << "设置成功!" << endl;
             user->question = question;
             user->answer = ans;
+            delay(1000);
             return;
         }
     }
@@ -352,7 +353,7 @@ void set_question (vector<user*> user_list, string UID) {
 int forget_password (vector<user*>& user_list, string UID) {
     for (auto& user: user_list) {
         if (user->UID == UID && user->question != "") {
-            cout << "密保问题为" << user->question << endl;
+            cout << "密保问题为: " << user->question << endl;
             cout << "请输入答案:";
             string ans;
             cin.sync();
@@ -397,7 +398,7 @@ int forget_password (vector<user*>& user_list, string UID) {
 
 
                 if (new_password == verify) {
-                    cout << "修改成功!" << endl << "即将返回主界面" << endl;
+                    cout << endl <<"修改成功!" << endl << "即将返回主界面..." << endl;
                     delay(1000);
                     user->user_password = new_password;
                     return 1;

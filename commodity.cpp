@@ -49,7 +49,7 @@ bool parse_launch_commodity (vector<string> commands, string commodity_name, dou
         if (words[2] == "commodity") {
             //≈–∂œ∑¢≤º…Ã∆∑∫œ≤ª∫œ∑®
             bool vaildity = true;
-            if (commodity_name.size() <= 0 || commodity_name.size() > 10) vaildity = false;
+            if (commodity_name.size() <= 0 || commodity_name.size() > 20) vaildity = false;
             else if (price < 0 || (price * 10) - int(price * 10) != 0) vaildity = false;
             else if (num <= 0) vaildity = false;
             else if (text.size() > 100) vaildity = false;
@@ -256,8 +256,8 @@ void display_commodity_list (vector<commodity*>& commodity_list) { //’π æ…Ã∆∑¡–±
             vector<commodity*> tmp;
             for (auto& i: commodity_list) {commodity* t = i; tmp.push_back(t);}    
             sort(tmp.begin(), tmp.end(), [](commodity* i, commodity* j)->bool {return i->price < j->price;});
-            cout << "**************************************************************************" << endl;
-            cout << "…Ã∆∑ID     √˚≥∆                  º€∏Ò     ˝¡ø   …œº‹ ±º‰   …Ã∆∑◊¥Ã¨" << endl;
+            cout << "*******************************************************************************" << endl;
+            cout << "…Ã∆∑ID     √˚≥∆                  º€∏Ò     ˝¡ø   ¬Ùº“ID  …œº‹ ±º‰   …Ã∆∑◊¥Ã¨" << endl;
             for (auto& it: tmp) 
                 {
                 cout << it->commodity_id << "       ";
@@ -278,8 +278,8 @@ void display_commodity_list (vector<commodity*>& commodity_list) { //’π æ…Ã∆∑¡–±
             vector<commodity*> tmp;
             for (auto& i: commodity_list) {commodity* t = i; tmp.push_back(t);}    
             sort(tmp.begin(), tmp.end(), [](commodity* i, commodity* j)->bool {return i->price > j->price;});
-            cout << "**************************************************************************" << endl;
-            cout << "…Ã∆∑ID     √˚≥∆                  º€∏Ò     ˝¡ø   …œº‹ ±º‰   …Ã∆∑◊¥Ã¨" << endl;
+            cout << "*******************************************************************************" << endl;
+            cout << "…Ã∆∑ID     √˚≥∆                  º€∏Ò     ˝¡ø   ¬Ùº“ID  …œº‹ ±º‰   …Ã∆∑◊¥Ã¨" << endl;
             for (auto& it: tmp) 
                 {
                 cout << it->commodity_id << "       ";
@@ -340,13 +340,17 @@ int remove_commodity (vector<commodity*>& commodity_list, string UID) {
     cin.sync();
     getline (cin, commodity_id);
     for (vector<commodity*>::iterator it = commodity_list.begin(); it != commodity_list.end(); ++it)
-        if ((UID == "" && (*it)->commodity_id == commodity_id) || ((*it)->trader_id == UID && (*it)->commodity_id == commodity_id)) {
+        if ((UID == "" && (*it)->commodity_id == commodity_id && (*it)->commodity_status == COMMODITY_NORMAL) || ((*it)->trader_id == UID && (*it)->commodity_id == commodity_id && (*it)->commodity_status == COMMODITY_NORMAL)) {
             cout << "“™»∑∂®œ¬º‹∏√…Ã∆∑¬?" << endl;
             cout << "*******************************************************************************" << endl;
-            cout << "…Ã∆∑ID     √˚≥∆     º€∏Ò      ˝¡ø     ¬Ùº“ID     …œº‹ ±º‰     …Ã∆∑◊¥Ã¨" << endl;
-            cout << (*it)->commodity_id << "  " << (*it)->commodity_name << "  " << fixed << setprecision(1) <<(*it)->price << "    "
-                << setprecision(0) << (*it)->stock << "  " << (*it)->trader_id << "   " << (*it)->launch_time
-                << "   " << (*it)->commodity_status << endl;
+            cout << "…Ã∆∑ID     √˚≥∆                  º€∏Ò     ˝¡ø   ¬Ùº“ID  …œº‹ ±º‰   …Ã∆∑◊¥Ã¨" << endl;
+            cout << (*it)->commodity_id << "       ";
+            cout << left << setw(20) << (*it)->commodity_name << "  ";
+            cout << left << setw(5) << fixed << setprecision(1) <<(*it)->price << "    ";
+            cout << left << setw(5) <<(*it)->stock << "  ";
+            cout << left << setw(4) << (*it)->trader_id << "   ";
+            cout << left << setw(10) << (*it)->launch_time << "  ";
+            cout << left << setw(10) << (*it)->commodity_status << endl;
             cout << "*******************************************************************************" << endl;
 
             cout << "«Î—°‘Ò(y/n):";
@@ -372,7 +376,7 @@ int remove_commodity (vector<commodity*>& commodity_list, string UID) {
                 else cout << "Œﬁ–ß—°‘Ò!«Î÷ÿ–¬ ‰»Î:" << endl;
             }
         }
-    cout << "√ª”–’“µΩ¥À…Ã∆∑!" << endl;
+    cout << "√ª”–’“µΩ¥À…Ã∆∑ªÚ¥À…Ã∆∑“—œ¬º‹!" << endl;
     cout << endl;
     return -1;
 }
@@ -488,7 +492,7 @@ void display_launched_commodity (vector<commodity*>& commodity_list, string UID)
     {
     case 1:
         {
-            cout << "**************************************************************************" << endl;
+            cout << "*******************************************************************************" << endl;
             cout << "…Ã∆∑ID     √˚≥∆                  º€∏Ò     ˝¡ø   …œº‹ ±º‰   …Ã∆∑◊¥Ã¨" << endl;
             for (vector<commodity*>::iterator it = commodity_list.begin(); it != commodity_list.end(); ++it) 
                 if ((*it)->trader_id == UID)
@@ -500,7 +504,7 @@ void display_launched_commodity (vector<commodity*>& commodity_list, string UID)
                         cout << left << setw(10) << (*it)->launch_time << "  ";
                         cout << left << setw(10) << (*it)->commodity_status << endl;
                     }
-            cout << "**************************************************************************" << endl;
+            cout << "*******************************************************************************" << endl;
             cout << endl;
         break;}
     case 2:
@@ -508,7 +512,7 @@ void display_launched_commodity (vector<commodity*>& commodity_list, string UID)
             vector<commodity*> tmp;
             for (auto& i: commodity_list) {commodity* t = i; tmp.push_back(t);}    
             sort(tmp.begin(), tmp.end(), [](commodity* i, commodity* j)->bool {return i->price < j->price;});
-            cout << "**************************************************************************" << endl;
+            cout << "*******************************************************************************" << endl;
             cout << "…Ã∆∑ID     √˚≥∆                  º€∏Ò     ˝¡ø   …œº‹ ±º‰   …Ã∆∑◊¥Ã¨" << endl;
             for (auto& it: tmp) 
                 if (it->trader_id == UID)
@@ -520,7 +524,7 @@ void display_launched_commodity (vector<commodity*>& commodity_list, string UID)
                         cout << left << setw(10) << it->launch_time << "  ";
                         cout << left << setw(10) << it->commodity_status << endl;
                     }
-            cout << "**************************************************************************" << endl;
+            cout << "*******************************************************************************" << endl;
             cout << endl;
             tmp.clear();     
             break;
@@ -530,7 +534,7 @@ void display_launched_commodity (vector<commodity*>& commodity_list, string UID)
             vector<commodity*> tmp;
             for (auto& i: commodity_list) {commodity* t = i; tmp.push_back(t);}    
             sort(tmp.begin(), tmp.end(), [](commodity* i, commodity* j)->bool {return i->price > j->price;});
-            cout << "**************************************************************************" << endl;
+            cout << "*******************************************************************************" << endl;
             cout << "…Ã∆∑ID     √˚≥∆                  º€∏Ò     ˝¡ø   …œº‹ ±º‰   …Ã∆∑◊¥Ã¨" << endl;
             for (auto& it: tmp) 
                 if (it->trader_id == UID)
@@ -542,7 +546,7 @@ void display_launched_commodity (vector<commodity*>& commodity_list, string UID)
                         cout << left << setw(10) << it->launch_time << "  ";
                         cout << left << setw(10) << it->commodity_status << endl;
                     }
-            cout << "**************************************************************************" << endl;
+            cout << "*******************************************************************************" << endl;
             cout << endl;
             tmp.clear(); 
             break; 
@@ -705,7 +709,7 @@ void best_selling (vector<commodity*>& commodity_list) {
             vector<commodity*> tmp;
             for (auto& i: commodity_list) {commodity* t = i; tmp.push_back(t);}    
             sort(tmp.begin(), tmp.end(), [](commodity* i, commodity* j)->bool {return i->price < j->price;});
-            cout << "**************************************************************************" << endl;
+            cout << "*******************************************************************************" << endl;
             cout << "…Ã∆∑ID     √˚≥∆                  º€∏Ò     ˝¡ø   …œº‹ ±º‰   …Ã∆∑◊¥Ã¨" << endl;
             for (auto& it: tmp) 
                 if (it->commodity_status == COMMODITY_NORMAL)
@@ -715,7 +719,7 @@ void best_selling (vector<commodity*>& commodity_list) {
                     cout << left << setw(4) << it->trader_id << "   ";
                     cout << left << setw(10) << it->launch_time << "  ";
                     cout << endl;}
-            cout << "**************************************************************************" << endl;
+            cout << "*******************************************************************************" << endl;
             cout << endl;
             tmp.clear();     
             break;
@@ -725,7 +729,7 @@ void best_selling (vector<commodity*>& commodity_list) {
             vector<commodity*> tmp;
             for (auto& i: commodity_list) {commodity* t = i; tmp.push_back(t);}    
             sort(tmp.begin(), tmp.end(), [](commodity* i, commodity* j)->bool {return i->price > j->price;});
-            cout << "**************************************************************************" << endl;
+            cout << "*******************************************************************************" << endl;
             cout << "…Ã∆∑ID     √˚≥∆                  º€∏Ò     ˝¡ø   …œº‹ ±º‰   …Ã∆∑◊¥Ã¨" << endl;
             for (auto& it: tmp) 
                 if (it->commodity_status == COMMODITY_NORMAL)
@@ -735,7 +739,7 @@ void best_selling (vector<commodity*>& commodity_list) {
                     cout << left << setw(4) << it->trader_id << "   ";
                     cout << left << setw(10) << it->launch_time << "  ";
                     cout << endl;}
-            cout << "**************************************************************************" << endl;
+            cout << "*******************************************************************************" << endl;
             cout << endl;
             tmp.clear();  
             break;
@@ -853,19 +857,19 @@ void comments (vector<commodity*>& commodity_list, vector<comment*>& comment_lis
     display_details (commodity_list, MID);
     //œ»’π æ…Ã∆∑–≈œ¢
     cout << endl << "∆¿¬€«¯:" << endl;
-    cout << "============================================================================================================================" << endl;
+    cout << "============================================================================================================" << endl;
     for (auto& t: comment_list) {
         if (t->MID == MID && t->status == "normal" && t->reply == "000") {
             cout << t->index << "  " << t->time << " " << t->UID << " " << left << setw(20) << t->content << " ";
             cout << "µ„‘ﬁ ˝:" << t->num << endl;
             for (auto& c: comment_list) {
                 if (c->reply == t->index && c->status == "normal") {
-                    cout << "ªÿ∏¥ " << c->time << " " << c->UID << " " << left << setw(20) << t->content << endl;
+                    cout << "ªÿ∏¥" << c->reply << " " << c->time << " " << c->UID << " " << left << setw(20) << c->content << endl;
                 }
             }
         }
     }
-    cout << "============================================================================================================================" << endl;
+    cout << "============================================================================================================" << endl;
 
     cout << "«Î—°‘Òƒ˙µƒ≤Ÿ◊˜(1.∑¢±Ì∆¿¬€ 2.ªÿ∏¥∆¿¬€ 3.µ„‘ﬁ∆¿¬€ 4.∑µªÿ…œ“ªº∂): ";
     string choice;
@@ -885,7 +889,7 @@ void comments (vector<commodity*>& commodity_list, vector<comment*>& comment_lis
                 string my_comment;
                 cin.sync();
                 getline(cin, my_comment);
-                if (my_comment.size() > 20) cout << "∆¿¬€◊÷ ˝≥¨≥ˆœﬁ÷∆!" << endl;
+                if (my_comment.size() > 20) {cout << "∆¿¬€◊÷ ˝≥¨≥ˆœﬁ÷∆!" << endl; system("pause");}
                 else {
                         int cur_num = comment_list.size();
                         string index;
@@ -905,13 +909,15 @@ void comments (vector<commodity*>& commodity_list, vector<comment*>& comment_lis
                 string Id;
                 cin.sync();
                 getline(cin, Id);
+                bool found = false;
                 for (auto& c: comment_list) {
-                    if (c->index == Id && c->status == "normal") {
+                    if (c->index == Id && c->reply == "000" && c->status == "normal") {
+                        found = true;
                         cout << "«Î¡Ùœ¬ƒ˙µƒªÿ∏¥(≤ª≥¨π˝20∏ˆ◊÷∑˚): ";
                         string my_comment;
                         cin.sync();
                         getline(cin, my_comment);
-                        if (my_comment.size() > 20) cout << "∆¿¬€◊÷ ˝≥¨≥ˆœﬁ÷∆!" << endl;
+                        if (my_comment.size() > 20) {cout << "∆¿¬€◊÷ ˝≥¨≥ˆœﬁ÷∆!" << endl; system("pause");}
                         else {
                                 int cur_num = comment_list.size();
                                 string index;
@@ -925,6 +931,8 @@ void comments (vector<commodity*>& commodity_list, vector<comment*>& comment_lis
                         }
                     }
                 }
+                if (!found) {cout << "√ª”–’“µΩ¥À∆¿¬€!" << endl;
+                            system("pasue");}
                 break;
             }
         case 3:
@@ -936,11 +944,12 @@ void comments (vector<commodity*>& commodity_list, vector<comment*>& comment_lis
                 for (auto& c: comment_list) {
                     if (c->index == Id && c->status == "normal") {
                         c->num += 1;
+                        save_comments(comment_list);
+                        cout << "µ„‘ﬁ≥…π¶!" << endl;
+                        break;
                     }
-                    save_comments(comment_list);
-                    cout << "µ„‘ﬁ≥…π¶!" << endl;
-                    system("pause");
                 }
+                system("pause");
                 break;
             }
         case 4: break;
